@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Smart Environment Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta http-equiv="refresh" content="10">
+</head>
+<body>
+    <div class="dashboard">
+        <header>
+            <div class="current-time" id="current-time"></div>
+        </header>
+        
+        <div class="dashboard-grid">
+            <!-- Air Conditioner Card (formerly Temperature) -->
+            <div class="card temperature-card">
+                <div class="card-header">
+                    <h2>Air Conditioner</h2>
+                    <div class="status-indicator" id="temp-status">Off</div>
+                </div>
+                <div class="card-content">
+                    <div class="temperature-display">
+                        <div class="current-temp">
+                            <i class="fas fa-thermometer-half"></i>
+                            <span id="current-temp">--</span>°C
+                        </div>
+                        <div class="target-temp">
+                            <i class="fas fa-bullseye"></i>
+                            <span id="target-temp">--</span>°C
+                        </div>
+                    </div>
+                    <div class="hvac-status">
+                        <div class="hvac-icon" id="hvac-icon">
+                            <i class="fas fa-power-off"></i>
+                        </div>
+                        <div class="hvac-label" id="hvac-label">Off</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Light Sensitivity Card -->
+            <div class="card light-card">
+                <div class="card-header">
+                    <h2>Light</h2>
+                    <div class="status-indicator" id="light-status">Off</div>
+                </div>
+                <div class="card-content">
+                    <div class="light-display">
+                        <div class="light-icon" id="light-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <div class="light-reading">
+                            <span id="light-value">--</span> Lux
+                        </div>
+                    </div>
+                    <div class="light-meter">
+                        <div class="meter-bar">
+                            <div class="meter-fill" id="light-meter-fill"></div>
+                        </div>
+                        <div class="meter-labels">
+                            <span>Dark</span>
+                            <span>Bright</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Occupancy Card -->
+            <div class="card occupancy-card">
+                <div class="card-header">
+                    <h2>Presence</h2>
+                    <div class="status-indicator" id="occupancy-status">Unknown</div>
+                </div>
+                <div class="card-content">
+                    <div class="occupancy-display">
+                        <div class="occupancy-icon" id="occupancy-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="occupancy-label" id="occupancy-label">
+                            Checking...
+                        </div>
+                    </div>
+                    <div class="last-detection">
+                        Last: <span id="last-detection">--</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Energy Waste Card -->
+            <div class="card energy-card">
+                <div class="card-header">
+                    <h2>Energy</h2>
+                    <div class="status-indicator" id="energy-status">Calculating</div>
+                </div>
+                <div class="card-content">
+                    <div class="energy-stats">
+                        <div class="energy-value">
+                            <div class="energy-label">Current:</div>
+                            <div class="energy-reading"><span id="current-waste">--</span> kWh</div>
+                        </div>
+                        <div class="energy-value">
+                            <div class="energy-label">Daily:</div>
+                            <div class="energy-reading"><span id="daily-waste">--</span> kWh</div>
+                        </div>
+                        <div class="energy-value">
+                            <div class="energy-label">Cost:</div>
+                            <div class="energy-reading">$<span id="waste-cost">--</span></div>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="energy-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html> 
