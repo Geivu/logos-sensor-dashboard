@@ -21,6 +21,19 @@
     --dark-warning: #d6a400;
     --dark-danger: #b33939;
     --dark-neutral: #555555;
+
+    /* Light theme variables */
+    --light-bg: #f0f2f5;
+    --light-card-bg: #ffffff;
+    --light-header-bg: #ffffff;
+    --light-text: #333333;
+    --light-secondary-text: #666666;
+    --light-border: #e0e0e0;
+    --light-accent: #3498db;
+    --light-success: #2ecc71;
+    --light-warning: #f39c12;
+    --light-danger: #e74c3c;
+    --light-neutral: #95a5a6;
 }
 
 * {
@@ -83,24 +96,20 @@ header h1 {
 }
 
 .card {
-    background-color: white;
-    border-radius: 5px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
     background-color: var(--dark-card-bg) !important;
     border: 1px solid var(--dark-border) !important;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
 .card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 5px;
-    background-color: #f8f9fa;
-    border-bottom: 1px solid #eee;
+    padding: 4px 8px;
     background-color: var(--dark-header-bg) !important;
     border-bottom: 1px solid var(--dark-border) !important;
 }
@@ -121,7 +130,7 @@ header h1 {
 }
 
 .card-content {
-    padding: 5px;
+    padding: 8px;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -214,29 +223,79 @@ header h1 {
 
 /* Energy Card */
 .energy-stats {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 5px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    margin-bottom: 2px;
+    padding: 1px;
+    background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.1) 100%);
+    border-radius: 2px;
 }
 
 .energy-value {
     text-align: center;
+    padding: 2px;
+    background: linear-gradient(145deg, rgba(61, 126, 170, 0.1) 0%, rgba(61, 126, 170, 0.05) 100%);
+    border-radius: 2px;
+    border: 1px solid rgba(61, 126, 170, 0.1);
+    box-shadow: inset 0 1px 1px rgba(255,255,255,0.05);
+    transition: all 0.2s ease;
+}
+
+.energy-value:hover {
+    background: linear-gradient(145deg, rgba(61, 126, 170, 0.15) 0%, rgba(61, 126, 170, 0.1) 100%);
+    transform: translateY(-1px);
 }
 
 .energy-label {
-    font-size: 9px;
+    font-size: 6px;
     color: var(--dark-secondary-text) !important;
+    margin-bottom: 1px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.8;
 }
 
 .energy-reading {
-    font-size: 11px;
+    font-size: 8px;
     font-weight: bold;
     color: var(--dark-text) !important;
+    line-height: 1.1;
 }
 
 .chart-container {
-    flex: 1;
-    min-height: 40px;
+    position: relative;
+    width: 100%;
+    min-height: 45px;
+    max-height: 55px;
+    margin-top: 2px;
+    background: linear-gradient(to bottom, 
+        rgba(61, 126, 170, 0.05) 0%,
+        rgba(61, 126, 170, 0.02) 100%);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.chart-container canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Status colors with gradients */
+#energy-status.good { 
+    background: linear-gradient(145deg, var(--dark-success) 0%, rgba(45, 134, 89, 0.9) 100%) !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+#energy-status.warning { 
+    background: linear-gradient(145deg, var(--dark-warning) 0%, rgba(214, 164, 0, 0.9) 100%) !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+#energy-status.high { 
+    background: linear-gradient(145deg, var(--dark-danger) 0%, rgba(179, 57, 57, 0.9) 100%) !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 
 /* Status colors */
@@ -249,10 +308,6 @@ header h1 {
 
 #occupancy-status.occupied { background-color: #28a745; color: white; }
 #occupancy-status.vacant { background-color: #6c757d; color: white; }
-
-#energy-status.good { background-color: #28a745; color: white; }
-#energy-status.warning { background-color: #ffc107; }
-#energy-status.high { background-color: #dc3545; color: white; }
 
 /* AC status indicators */
 #temp-status.status-on { 
@@ -297,9 +352,8 @@ header h1 {
     /* Dashboard container */
     .dashboard {
         width: 100% !important;
-        height: 280px !important;
-        max-width: 480px !important;
-        max-height: 280px !important;
+        height: 100vh;
+        max-height: 320px;
         display: flex !important;
         flex-direction: column !important;
         padding: 0 !important;
@@ -347,7 +401,7 @@ header h1 {
         display: flex !important;
         justify-content: space-between !important;
         align-items: center !important;
-        padding: 1px 2px !important;
+        padding: 3px 6px !important;
         height: 6px !important;
         border-bottom: none !important;
     }
@@ -364,7 +418,7 @@ header h1 {
     
     /* Card content */
     .card-content {
-        padding: 1px !important;
+        padding: 6px !important;
         height: calc(100% - 6px) !important;
         display: flex !important;
         flex-direction: column !important;
@@ -386,7 +440,8 @@ header h1 {
     
     /* Chart */
     .chart-container {
-        height: 10px !important;
+        min-height: 40px;
+        max-height: 50px;
     }
     
     /* Specific card layouts */
@@ -404,8 +459,10 @@ header h1 {
     }
     
     .energy-stats {
-        display: flex !important;
-        justify-content: space-between !important;
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 1px !important;
+        margin-bottom: 1px !important;
     }
     
     /* Hide meter labels completely */
@@ -458,6 +515,24 @@ header h1 {
     
     .occupancy-label {
         font-size: 8px;
+    }
+    
+    .energy-stats {
+        gap: 1px;
+        margin-bottom: 1px;
+    }
+    
+    .energy-value {
+        padding: 1px;
+    }
+    
+    .energy-label {
+        font-size: 5px;
+        margin-bottom: 0;
+    }
+    
+    .energy-reading {
+        font-size: 7px;
     }
 }
 
@@ -579,19 +654,24 @@ header h1 {
     /* Energy card adjustments */
     .energy-stats {
         gap: 1px;
-        margin-bottom: 2px;
+        margin-bottom: 1px;
+    }
+    
+    .energy-value {
+        padding: 1px;
     }
     
     .energy-label {
-        font-size: 6px;
+        font-size: 4px;
     }
     
     .energy-reading {
-        font-size: 7px;
+        font-size: 6px;
     }
     
     .chart-container {
-        height: 5px !important;
+        min-height: 35px;
+        max-height: 45px;
     }
 }
 
@@ -680,4 +760,123 @@ header h1, .current-time {
 /* Chart adjustments for dark theme */
 .chart-container canvas {
     filter: invert(0.85) hue-rotate(180deg) !important;
+}
+
+/* Theme toggle button */
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.theme-toggle {
+    background: none;
+    border: none;
+    color: var(--dark-text);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.theme-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.theme-toggle i {
+    font-size: 14px;
+}
+
+/* Light theme styles */
+body.light-theme {
+    background-color: var(--light-bg) !important;
+    color: var(--light-text) !important;
+}
+
+body.light-theme .dashboard {
+    background-color: var(--light-bg) !important;
+}
+
+body.light-theme header {
+    background-color: var(--light-header-bg) !important;
+    border-bottom: 1px solid var(--light-border) !important;
+}
+
+body.light-theme header h1,
+body.light-theme .current-time {
+    color: var(--light-text) !important;
+}
+
+body.light-theme .card {
+    background-color: var(--light-card-bg) !important;
+    border: 1px solid var(--light-border) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+body.light-theme .card-header {
+    background-color: var(--light-header-bg) !important;
+    border-bottom: 1px solid var(--light-border) !important;
+}
+
+body.light-theme .card-header h2 {
+    color: var(--light-text) !important;
+}
+
+body.light-theme .status-indicator {
+    background-color: var(--light-neutral) !important;
+    color: var(--light-text) !important;
+}
+
+body.light-theme #temp-status.stable { background-color: var(--light-success) !important; }
+body.light-theme #temp-status.adjusting { background-color: var(--light-warning) !important; }
+body.light-theme #temp-status.critical { background-color: var(--light-danger) !important; }
+
+body.light-theme #light-status.on { background-color: var(--light-warning) !important; }
+body.light-theme #light-status.off { background-color: var(--light-neutral) !important; }
+
+body.light-theme #occupancy-status.occupied { background-color: var(--light-success) !important; }
+body.light-theme #occupancy-status.vacant { background-color: var(--light-neutral) !important; }
+
+body.light-theme #energy-status.good { background-color: var(--light-success) !important; }
+body.light-theme #energy-status.warning { background-color: var(--light-warning) !important; }
+body.light-theme #energy-status.high { background-color: var(--light-danger) !important; }
+
+body.light-theme .current-temp,
+body.light-theme .light-reading,
+body.light-theme .occupancy-label,
+body.light-theme .energy-reading {
+    color: var(--light-text) !important;
+}
+
+body.light-theme .temp-difference,
+body.light-theme .target-temp,
+body.light-theme .hvac-label,
+body.light-theme .last-detection,
+body.light-theme .energy-label {
+    color: var(--light-secondary-text) !important;
+}
+
+body.light-theme .fas,
+body.light-theme .far,
+body.light-theme .fa {
+    color: var(--light-accent) !important;
+}
+
+body.light-theme .meter-bar {
+    background-color: var(--light-border) !important;
+}
+
+body.light-theme .meter-fill {
+    background-color: var(--light-accent) !important;
+}
+
+body.light-theme .meter-labels {
+    color: var(--light-secondary-text) !important;
+}
+
+body.light-theme .chart-container canvas {
+    filter: none !important;
 } 

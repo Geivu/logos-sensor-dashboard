@@ -8,6 +8,9 @@ let hvacRunning = false;
 let currentTemp = 0;
 let targetTemp = 0;
 
+// Theme management
+let isDarkTheme = true;
+
 // Constants
 const LIGHT_THRESHOLD = 500; // Lux threshold for lights on/off
 const ENERGY_COST_PER_KWH = 0.15; // Cost in dollars per kWh
@@ -16,6 +19,9 @@ const LIGHTS_ENERGY_RATE = 0.5; // kWh per hour when on
 
 // Initialize the dashboard
 function initDashboard() {
+    // Initialize theme
+    initTheme();
+    
     updateTime();
     setInterval(updateTime, 1000);
     
@@ -25,14 +31,69 @@ function initDashboard() {
     updateOccupancy();
     updateEnergyWaste();
     
-    // Set up regular updates with faster intervals
+    // Set up regular updates with slower intervals
     setInterval(updateTemperature, 2000);
     setInterval(updateLightSensitivity, 3000);
     setInterval(updateOccupancy, 4000);
-    setInterval(updateEnergyWaste, 1500);
+    setInterval(updateEnergyWaste, 3000);
     
     // Initialize chart
     initEnergyChart();
+}
+
+// Theme initialization and toggle
+function initTheme() {
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = themeToggle.querySelector('i');
+    
+    // Set initial theme
+    document.body.classList.toggle('light-theme', !isDarkTheme);
+    updateThemeIcon(themeIcon);
+    
+    // Add click handler
+    themeToggle.addEventListener('click', () => {
+        isDarkTheme = !isDarkTheme;
+        document.body.classList.toggle('light-theme', !isDarkTheme);
+        updateThemeIcon(themeIcon);
+        
+        // Send theme change to server
+        if (window.ws && window.ws.readyState === WebSocket.OPEN) {
+            window.ws.send(JSON.stringify({
+                type: 'theme',
+                isDark: isDarkTheme
+            }));
+        }
+        
+        // Update chart colors if needed
+        if (window.energyChart) {
+            updateChartTheme();
+        }
+    });
+}
+
+function updateThemeIcon(icon) {
+    icon.className = isDarkTheme ? 'fas fa-moon' : 'fas fa-sun';
+}
+
+function updateChartTheme() {
+    if (!window.energyChart) return;
+    
+    const ctx = window.energyChart.ctx;
+    const isLight = !isDarkTheme;
+    
+    // Update chart colors based on theme
+    const gradient = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height);
+    gradient.addColorStop(0, isLight ? 'rgba(52, 152, 219, 0.3)' : 'rgba(61, 126, 170, 0.3)');
+    gradient.addColorStop(1, isLight ? 'rgba(52, 152, 219, 0.05)' : 'rgba(61, 126, 170, 0.05)');
+    
+    window.energyChart.data.datasets[0].backgroundColor = gradient;
+    window.energyChart.data.datasets[0].borderColor = isLight ? '#3498db' : '#3d7eaa';
+    window.energyChart.data.datasets[0].pointBackgroundColor = isLight ? '#3498db' : '#3d7eaa';
+    window.energyChart.data.datasets[0].pointBorderColor = isLight ? '#ffffff' : '#ffffff';
+    window.energyChart.data.datasets[0].pointHoverBackgroundColor = isLight ? '#ffffff' : '#ffffff';
+    window.energyChart.data.datasets[0].pointHoverBorderColor = isLight ? '#3498db' : '#3d7eaa';
+    
+    window.energyChart.update();
 }
 
 // Update current time display
@@ -228,20 +289,34 @@ function initEnergyChart() {
     const ctx = document.getElementById('energy-chart').getContext('2d');
     
     // Create initial empty data
-    const initialData = Array(12).fill(0);
+    const initialData = Array(4).fill(0); // Reduced points for better fit
+    
+    // Create gradient for the chart
+    const gradient = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height);
+    gradient.addColorStop(0, 'rgba(61, 126, 170, 0.3)');
+    gradient.addColorStop(1, 'rgba(61, 126, 170, 0.05)');
     
     window.energyChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: Array(12).fill(''),
+            labels: Array(4).fill('').map((_, i) => `${i + 1}h`),
             datasets: [{
                 label: 'Energy Waste (kWh)',
                 data: initialData,
                 borderColor: '#3d7eaa',
-                backgroundColor: 'rgba(61, 126, 170, 0.1)',
-                borderWidth: 1,
+                backgroundColor: gradient,
+                borderWidth: 1.5,
                 tension: 0.4,
-                fill: true
+                fill: true,
+                pointRadius: 2,
+                pointHoverRadius: 3,
+                pointBackgroundColor: '#3d7eaa',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 1,
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: '#3d7eaa',
+                pointHoverBorderWidth: 1,
+                cubicInterpolationMode: 'monotone'
             }]
         },
         options: {
@@ -252,43 +327,125 @@ function initEnergyChart() {
                     display: false
                 },
                 tooltip: {
-                    enabled: false
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                    titleColor: '#fff',
+                    bodyColor: '#fff',
+                    padding: 3,
+                    displayColors: false,
+                    cornerRadius: 2,
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.parsed.y.toFixed(1)} kWh`;
+                        }
+                    }
                 }
             },
             scales: {
                 x: {
-                    display: false
+                    display: true,
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        color: '#aaaaaa',
+                        font: {
+                            size: 7,
+                            family: "'Segoe UI', sans-serif"
+                        },
+                        maxRotation: 0,
+                        padding: 2
+                    }
                 },
                 y: {
-                    display: false,
-                    min: 0,
-                    max: 2 // Set max to accommodate typical waste values
+                    display: true,
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.03)',
+                        drawBorder: false,
+                        tickLength: 0
+                    },
+                    ticks: {
+                        color: '#aaaaaa',
+                        font: {
+                            size: 7,
+                            family: "'Segoe UI', sans-serif"
+                        },
+                        maxTicksLimit: 2,
+                        padding: 2,
+                        callback: function(value) {
+                            return value.toFixed(1);
+                        }
+                    }
                 }
             },
             animation: {
-                duration: 0
+                duration: 600,
+                easing: 'easeOutQuart'
+            },
+            layout: {
+                padding: {
+                    left: 1,
+                    right: 1,
+                    top: 2,
+                    bottom: 1
+                }
             },
             elements: {
+                line: {
+                    borderCapStyle: 'round',
+                    borderJoinStyle: 'round'
+                },
                 point: {
-                    radius: 0
+                    hitRadius: 4
                 }
+            },
+            interaction: {
+                intersect: false,
+                mode: 'nearest'
             }
         }
     });
 }
 
+// Track animation state
+let isAnimating = false;
+let pendingValue = null;
+
 // Update energy chart with new data
 function updateEnergyChart(newValue) {
+    if (!window.energyChart) return;
+    
+    // If already animating, store the pending value
+    if (isAnimating) {
+        pendingValue = newValue;
+        return;
+    }
+    
+    const chart = window.energyChart;
+    const currentData = chart.data.datasets[0].data;
+    
+    // Start animation
+    isAnimating = true;
+    
     // Add new value and remove oldest
-    window.energyChart.data.datasets[0].data.push(newValue);
-    window.energyChart.data.datasets[0].data.shift();
+    currentData.push(newValue);
+    currentData.shift();
     
-    // Adjust y-axis scale if needed
-    const maxValue = Math.max(...window.energyChart.data.datasets[0].data) * 1.2;
-    window.energyChart.options.scales.y.max = Math.max(maxValue, 1);
-    
-    // Update chart
-    window.energyChart.update();
+    // Update with animation
+    chart.update({
+        duration: 750,
+        easing: 'easeOutQuart',
+        onComplete: () => {
+            isAnimating = false;
+            
+            // If there's a pending value, update with it
+            if (pendingValue !== null) {
+                const valueToUpdate = pendingValue;
+                pendingValue = null;
+                updateEnergyChart(valueToUpdate);
+            }
+        }
+    });
 }
 
 // Add a window resize handler to adjust the chart

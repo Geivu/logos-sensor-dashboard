@@ -7,12 +7,19 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/websocket/1.0.0/websocket.min.js"></script>
     <meta http-equiv="refresh" content="10">
 </head>
 <body>
     <div class="dashboard">
         <header>
-            <div class="current-time" id="current-time"></div>
+            <h1>Sensor Dashboard</h1>
+            <div class="header-controls">
+                <span class="current-time" id="current-time">00:00:00</span>
+                <button id="theme-toggle" class="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
         </header>
         
         <div class="dashboard-grid">
@@ -119,6 +126,33 @@
         </div>
     </div>
     
+    <script>
+        // WebSocket connection
+        const ws = new WebSocket('ws://localhost:8765');
+        
+        ws.onopen = function() {
+            console.log('WebSocket connection established');
+        };
+        
+        ws.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            if (data.type === 'reload') {
+                window.location.reload();
+            } else if (data.type === 'theme') {
+                document.body.classList.toggle('light-theme', !data.isDark);
+                const themeIcon = document.querySelector('#theme-toggle i');
+                themeIcon.className = data.isDark ? 'fas fa-moon' : 'fas fa-sun';
+            }
+        };
+        
+        ws.onclose = function() {
+            console.log('WebSocket connection closed');
+        };
+        
+        ws.onerror = function(error) {
+            console.error('WebSocket error:', error);
+        };
+    </script>
     <script src="script.js"></script>
 </body>
 </html> 
