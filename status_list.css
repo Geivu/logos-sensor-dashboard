@@ -128,6 +128,12 @@ header h1 {
     touch-action: pan-x;
     user-select: none;
     -webkit-user-select: none;
+    background-color: var(--dark-header-bg);
+    border-radius: 12px;
+    margin: 0 5px 15px 5px;
+    box-shadow: 0 4px 6px var(--dark-shadow);
+    border: 1px solid var(--dark-border);
+    cursor: grab;
 }
 
 .class-selector-wrapper::-webkit-scrollbar {
@@ -142,11 +148,10 @@ header h1 {
     touch-action: pan-x;
     user-select: none;
     -webkit-user-select: none;
-    background-color: var(--dark-header-bg);
-    border-radius: 12px;
-    margin: 0 5px 15px 5px;
-    box-shadow: 0 4px 6px var(--dark-shadow);
-    border: 1px solid var(--dark-border);
+}
+
+.class-selector-wrapper:active {
+    cursor: grabbing;
 }
 
 .class-btn {
@@ -190,6 +195,26 @@ header h1 {
     color: white;
     border-color: var(--dark-accent);
     box-shadow: 0 4px 8px var(--dark-glow);
+}
+
+.class-btn.add-class {
+    background: var(--dark-success);
+    color: white;
+    border-color: var(--dark-success);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+}
+
+.class-btn.add-class:hover {
+    background: var(--dark-success);
+    border-color: var(--dark-success);
+    opacity: 0.9;
+}
+
+.class-btn.add-class i {
+    font-size: 12px;
 }
 
 .class-status {
@@ -826,4 +851,61 @@ body.light-theme .detail-row:hover {
     .class-selector {
         padding: 8px 10px;
     }
+}
+
+.remove-class-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    padding: 0 16px;
+    width: 100%;
+}
+
+.remove-class-btn {
+    background-color: var(--dark-danger);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px var(--dark-shadow);
+    width: 100%;
+    justify-content: center;
+}
+
+.remove-class-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px var(--dark-shadow);
+}
+
+.remove-class-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 2px var(--dark-shadow);
+}
+
+.remove-class-btn i {
+    font-size: 0.9rem;
+}
+
+/* Light theme styles for remove button */
+body.light-theme .remove-class-btn {
+    background-color: var(--light-danger);
+    box-shadow: 0 2px 4px var(--light-shadow);
+}
+
+body.light-theme .remove-class-btn:hover {
+    box-shadow: 0 4px 8px var(--light-shadow);
+}
+
+body.light-theme .remove-class-btn:active {
+    box-shadow: 0 1px 2px var(--light-shadow);
 } 
