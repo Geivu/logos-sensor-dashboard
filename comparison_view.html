@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Energy Waste Comparison</title>
+    <link rel="stylesheet" href="comparison_view.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Energy Waste Comparison</h1>
+            <div class="header-controls">
+                <span class="current-time" id="current-time">00:00:00</span>
+                <button id="theme-toggle" class="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="view-links">
+                    <a href="grid_view.html" class="view-toggle">
+                        <i class="fas fa-th"></i> Grid View
+                    </a>
+                    <a href="status_list.html" class="view-toggle">
+                        <i class="fas fa-list"></i> List View
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <!-- Main Comparison Chart -->
+            <div class="comparison-chart-container">
+                <h2>Energy Waste Comparison</h2>
+                <canvas id="comparison-chart"></canvas>
+            </div>
+
+            <!-- Quick Stats Panel -->
+            <div class="quick-stats">
+                <div class="stat-card most-efficient">
+                    <h3>Most Efficient Room</h3>
+                    <div class="stat-content">
+                        <i class="fas fa-award"></i>
+                        <span id="most-efficient-room">--</span>
+                        <span id="most-efficient-value">-- kWh</span>
+                    </div>
+                </div>
+                <div class="stat-card most-wasteful">
+                    <h3>Most Wasteful Room</h3>
+                    <div class="stat-content">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span id="most-wasteful-room">--</span>
+                        <span id="most-wasteful-value">-- kWh</span>
+                    </div>
+                </div>
+                <div class="stat-card total-waste">
+                    <h3>Total Waste Today</h3>
+                    <div class="stat-content">
+                        <i class="fas fa-bolt"></i>
+                        <span id="total-waste-value">-- kWh</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Room Details Table -->
+            <div class="room-details">
+                <h2>Room Details</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Room</th>
+                                <th>Energy Waste</th>
+                                <th>Temperature</th>
+                                <th>Light Level</th>
+                                <th>Occupancy</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="room-details-body">
+                            <!-- Rows will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="comparison_view.js"></script>
+</body>
+</html> 

@@ -109,12 +109,43 @@ header h1 {
     transition: all 0.2s ease;
 }
 
+.view-toggle {
+    background: none;
+    border: none;
+    color: var(--dark-text);
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 20px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+    font-size: 14px;
+}
+
 .theme-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.view-toggle:hover {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
 .theme-toggle i {
     font-size: 16px;
+}
+
+.view-toggle i {
+    font-size: 16px;
+}
+
+body.light-theme .view-toggle {
+    color: var(--light-text);
+}
+
+body.light-theme .view-toggle:hover {
+    background-color: rgba(0, 0, 0, 0.05);
 }
 
 .class-selector-wrapper {
