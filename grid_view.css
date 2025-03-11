@@ -1,0 +1,314 @@
+:root {
+    /* Dark theme variables */
+    --dark-bg: #1a1a1a;
+    --dark-card-bg: #242424;
+    --dark-border: #333333;
+    --dark-text: #ffffff;
+    --dark-subtext: #aaaaaa;
+    --dark-hover: #2a2a2a;
+    --dark-shadow: rgba(0, 0, 0, 0.3);
+    --dark-success: #28a745;
+    --dark-warning: #ffc107;
+    --dark-danger: #dc3545;
+    --dark-neutral: #6c757d;
+
+    /* Light theme variables */
+    --light-bg: #f8f9fa;
+    --light-card-bg: #ffffff;
+    --light-border: #dee2e6;
+    --light-text: #212529;
+    --light-subtext: #6c757d;
+    --light-hover: #e9ecef;
+    --light-shadow: rgba(0, 0, 0, 0.1);
+    --light-success: #198754;
+    --light-warning: #ffc107;
+    --light-danger: #dc3545;
+    --light-neutral: #6c757d;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: var(--dark-bg);
+    color: var(--dark-text);
+}
+
+.grid-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding: 0 16px;
+}
+
+h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.current-time {
+    font-size: 0.9rem;
+    color: var(--dark-subtext);
+}
+
+.theme-toggle, .view-toggle {
+    background: none;
+    border: none;
+    color: var(--dark-text);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.theme-toggle:hover, .view-toggle:hover {
+    background-color: var(--dark-hover);
+}
+
+.grid-view {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    padding: 0 16px;
+}
+
+.class-card {
+    background-color: var(--dark-card-bg);
+    border: 1px solid var(--dark-border);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.class-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.class-header h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.remove-class-btn {
+    background: none;
+    border: none;
+    color: var(--dark-danger);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    opacity: 0.7;
+    transition: all 0.2s;
+}
+
+.remove-class-btn:hover {
+    opacity: 1;
+    background-color: var(--dark-hover);
+}
+
+.sensor-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.sensor-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px;
+    background-color: var(--dark-bg);
+    border-radius: 8px;
+}
+
+.sensor-icon {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--dark-card-bg);
+    border-radius: 8px;
+    color: var(--dark-subtext);
+}
+
+.sensor-data {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.sensor-label {
+    font-size: 0.8rem;
+    color: var(--dark-subtext);
+}
+
+.sensor-value {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    background-color: var(--dark-neutral);
+    color: white;
+}
+
+.status-badge.on,
+.status-badge.occupied,
+.status-badge.good {
+    background-color: var(--dark-success);
+}
+
+.status-badge.off,
+.status-badge.vacant {
+    background-color: var(--dark-neutral);
+}
+
+.status-badge.warning {
+    background-color: var(--dark-warning);
+}
+
+.status-badge.high {
+    background-color: var(--dark-danger);
+}
+
+.chart-container {
+    height: 100px;
+    margin-top: 8px;
+}
+
+.add-class-card {
+    border: 2px dashed var(--dark-border);
+    background: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.add-class-btn {
+    background: none;
+    border: none;
+    color: var(--dark-text);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 24px;
+    width: 100%;
+    height: 100%;
+}
+
+.add-class-btn i {
+    font-size: 24px;
+    color: var(--dark-subtext);
+}
+
+.add-class-btn span {
+    font-size: 0.9rem;
+    color: var(--dark-subtext);
+}
+
+.add-class-card:hover {
+    background-color: var(--dark-hover);
+}
+
+/* Light theme styles */
+body.light-theme {
+    background-color: var(--light-bg);
+    color: var(--light-text);
+}
+
+body.light-theme .class-card {
+    background-color: var(--light-card-bg);
+    border-color: var(--light-border);
+}
+
+body.light-theme .sensor-item {
+    background-color: var(--light-bg);
+}
+
+body.light-theme .sensor-icon {
+    background-color: var(--light-card-bg);
+    color: var(--light-subtext);
+}
+
+body.light-theme .sensor-label {
+    color: var(--light-subtext);
+}
+
+body.light-theme .theme-toggle,
+body.light-theme .view-toggle {
+    color: var(--light-text);
+}
+
+body.light-theme .theme-toggle:hover,
+body.light-theme .view-toggle:hover {
+    background-color: var(--light-hover);
+}
+
+body.light-theme .add-class-card {
+    border-color: var(--light-border);
+}
+
+body.light-theme .add-class-btn i,
+body.light-theme .add-class-btn span {
+    color: var(--light-subtext);
+}
+
+body.light-theme .add-class-card:hover {
+    background-color: var(--light-hover);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .grid-view {
+        grid-template-columns: 1fr;
+    }
+
+    .sensor-grid {
+        grid-template-columns: 1fr;
+    }
+
+    header {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1200px) {
+    .grid-view {
+        grid-template-columns: repeat(2, 1fr);
+    }
+} 

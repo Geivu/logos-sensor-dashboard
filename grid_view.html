@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Class Sensor Grid View</title>
+    <link rel="stylesheet" href="grid_view.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="grid-container">
+        <header>
+            <h1>Class Sensor Grid View</h1>
+            <div class="header-controls">
+                <span class="current-time" id="current-time">00:00:00</span>
+                <button id="theme-toggle" class="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <a href="status_list.html" class="view-toggle">
+                    <i class="fas fa-list"></i> List View
+                </a>
+            </div>
+        </header>
+
+        <div class="grid-view">
+            <!-- Class 1A Status -->
+            <div class="class-card" data-class="1A">
+                <div class="class-header">
+                    <h2>Class 1A</h2>
+                    <button class="remove-class-btn" data-class="1A">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <div class="sensor-grid">
+                    <!-- Temperature -->
+                    <div class="sensor-item">
+                        <div class="sensor-icon">
+                            <i class="fas fa-snowflake"></i>
+                        </div>
+                        <div class="sensor-data">
+                            <span class="sensor-label">Temperature</span>
+                            <span class="sensor-value" id="current-temp-1A">--</span>°C
+                            <span class="status-badge" id="temp-status-1A">Off</span>
+                        </div>
+                    </div>
+                    <!-- Light -->
+                    <div class="sensor-item">
+                        <div class="sensor-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <div class="sensor-data">
+                            <span class="sensor-label">Light Level</span>
+                            <span class="sensor-value" id="light-value-1A">--</span> Lux
+                            <span class="status-badge" id="light-status-1A">Off</span>
+                        </div>
+                    </div>
+                    <!-- Presence -->
+                    <div class="sensor-item">
+                        <div class="sensor-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="sensor-data">
+                            <span class="sensor-label">Presence</span>
+                            <span class="sensor-value" id="occupancy-label-1A">Checking...</span>
+                            <span class="status-badge" id="occupancy-status-1A">Unknown</span>
+                        </div>
+                    </div>
+                    <!-- Energy -->
+                    <div class="sensor-item">
+                        <div class="sensor-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <div class="sensor-data">
+                            <span class="sensor-label">Energy Waste</span>
+                            <span class="sensor-value"><span id="current-waste-1A">--</span> kWh</span>
+                            <span class="status-badge" id="energy-status-1A">Calculating</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="energy-chart-1A"></canvas>
+                </div>
+            </div>
+
+            <!-- Class 1B Status -->
+            <div class="class-card" data-class="1B">
+                <div class="class-header">
+                    <h2>Class 1B</h2>
+                    <button class="remove-class-btn" data-class="1B">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <div class="sensor-grid">
+                    <!-- Temperature -->
+                    <div class="sensor-item">
+                        <div class="sensor-icon">
+                            <i class="fas fa-snowflake"></i>
+                        </div>
+                        <div class="sensor-data">
+                            <span class="sensor-label">Temperature</span>
+                            <span class="sensor-value" id="current-temp-1B">--</span>°C
+                            <span class="status-badge" id="temp-status-1B">Off</span>
+                        </div>
+                    </div>
+                    <!-- Light -->
+                    <div class="sensor-item">
+                        <div class="sensor-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <div class="sensor-data">
+                            <span class="sensor-label">Light Level</span>
+                            <span class="sensor-value" id="light-value-1B">--</span> Lux
+                            <span class="status-badge" id="light-status-1B">Off</span>
+                        </div>
+                    </div>
+                    <!-- Presence -->
+                    <div class="sensor-item">
+                        <div class="sensor-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="sensor-data">
+                            <span class="sensor-label">Presence</span>
+                            <span class="sensor-value" id="occupancy-label-1B">Checking...</span>
+                            <span class="status-badge" id="occupancy-status-1B">Unknown</span>
+                        </div>
+                    </div>
+                    <!-- Energy -->
+                    <div class="sensor-item">
+                        <div class="sensor-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <div class="sensor-data">
+                            <span class="sensor-label">Energy Waste</span>
+                            <span class="sensor-value"><span id="current-waste-1B">--</span> kWh</span>
+                            <span class="status-badge" id="energy-status-1B">Calculating</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="energy-chart-1B"></canvas>
+                </div>
+            </div>
+
+            <!-- Class 1C Status -->
+            <div class="class-card" data-class="1C">
+                <div class="class-header">
+                    <h2>Class 1C</h2>
+                    <button class="remove-class-btn" data-class="1C">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <div class="sensor-grid">
+                    <!-- Temperature -->
+                    <div class="sensor-item">
+                        <div class="sensor-icon">
+                            <i class="fas fa-snowflake"></i>
+                        </div>
+                        <div class="sensor-data">
+                            <span class="sensor-label">Temperature</span>
+                            <span class="sensor-value" id="current-temp-1C">--</span>°C
+                            <span class="status-badge" id="temp-status-1C">Off</span>
+                        </div>
+                    </div>
+                    <!-- Light -->
+                    <div class="sensor-item">
+                        <div class="sensor-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <div class="sensor-data">
+                            <span class="sensor-label">Light Level</span>
+                            <span class="sensor-value" id="light-value-1C">--</span> Lux
+                            <span class="status-badge" id="light-status-1C">Off</span>
+                        </div>
+                    </div>
+                    <!-- Presence -->
+                    <div class="sensor-item">
+                        <div class="sensor-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="sensor-data">
+                            <span class="sensor-label">Presence</span>
+                            <span class="sensor-value" id="occupancy-label-1C">Checking...</span>
+                            <span class="status-badge" id="occupancy-status-1C">Unknown</span>
+                        </div>
+                    </div>
+                    <!-- Energy -->
+                    <div class="sensor-item">
+                        <div class="sensor-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <div class="sensor-data">
+                            <span class="sensor-label">Energy Waste</span>
+                            <span class="sensor-value"><span id="current-waste-1C">--</span> kWh</span>
+                            <span class="status-badge" id="energy-status-1C">Calculating</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="energy-chart-1C"></canvas>
+                </div>
+            </div>
+
+            <!-- Class 2A Status -->
+            <div class="class-card" data-class="2A">
+                <div class="class-header">
+                    <h2>Class 2A</h2>
+                    <button class="remove-class-btn" data-class="2A">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <div class="sensor-grid">
+                    <!-- Temperature -->
+                    <div class="sensor-item">
+                        <div class="sensor-icon">
+                            <i class="fas fa-snowflake"></i>
+                        </div>
+                        <div class="sensor-data">
+                            <span class="sensor-label">Temperature</span>
+                            <span class="sensor-value" id="current-temp-2A">--</span>°C
+                            <span class="status-badge" id="temp-status-2A">Off</span>
+                        </div>
+                    </div>
+                    <!-- Light -->
+                    <div class="sensor-item">
+                        <div class="sensor-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <div class="sensor-data">
+                            <span class="sensor-label">Light Level</span>
+                            <span class="sensor-value" id="light-value-2A">--</span> Lux
+                            <span class="status-badge" id="light-status-2A">Off</span>
+                        </div>
+                    </div>
+                    <!-- Presence -->
+                    <div class="sensor-item">
+                        <div class="sensor-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="sensor-data">
+                            <span class="sensor-label">Presence</span>
+                            <span class="sensor-value" id="occupancy-label-2A">Checking...</span>
+                            <span class="status-badge" id="occupancy-status-2A">Unknown</span>
+                        </div>
+                    </div>
+                    <!-- Energy -->
+                    <div class="sensor-item">
+                        <div class="sensor-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <div class="sensor-data">
+                            <span class="sensor-label">Energy Waste</span>
+                            <span class="sensor-value"><span id="current-waste-2A">--</span> kWh</span>
+                            <span class="status-badge" id="energy-status-2A">Calculating</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="energy-chart-2A"></canvas>
+                </div>
+            </div>
+
+            <!-- Class 2B Status -->
+            <div class="class-card" data-class="2B">
+                <div class="class-header">
+                    <h2>Class 2B</h2>
+                    <button class="remove-class-btn" data-class="2B">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <div class="sensor-grid">
+                    <!-- Temperature -->
+                    <div class="sensor-item">
+                        <div class="sensor-icon">
+                            <i class="fas fa-snowflake"></i>
+                        </div>
+                        <div class="sensor-data">
+                            <span class="sensor-label">Temperature</span>
+                            <span class="sensor-value" id="current-temp-2B">--</span>°C
+                            <span class="status-badge" id="temp-status-2B">Off</span>
+                        </div>
+                    </div>
+                    <!-- Light -->
+                    <div class="sensor-item">
+                        <div class="sensor-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <div class="sensor-data">
+                            <span class="sensor-label">Light Level</span>
+                            <span class="sensor-value" id="light-value-2B">--</span> Lux
+                            <span class="status-badge" id="light-status-2B">Off</span>
+                        </div>
+                    </div>
+                    <!-- Presence -->
+                    <div class="sensor-item">
+                        <div class="sensor-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="sensor-data">
+                            <span class="sensor-label">Presence</span>
+                            <span class="sensor-value" id="occupancy-label-2B">Checking...</span>
+                            <span class="status-badge" id="occupancy-status-2B">Unknown</span>
+                        </div>
+                    </div>
+                    <!-- Energy -->
+                    <div class="sensor-item">
+                        <div class="sensor-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <div class="sensor-data">
+                            <span class="sensor-label">Energy Waste</span>
+                            <span class="sensor-value"><span id="current-waste-2B">--</span> kWh</span>
+                            <span class="status-badge" id="energy-status-2B">Calculating</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="energy-chart-2B"></canvas>
+                </div>
+            </div>
+
+            <!-- Add Class Card -->
+            <div class="class-card add-class-card">
+                <button id="add-class-btn" class="add-class-btn">
+                    <i class="fas fa-plus"></i>
+                    <span>Add New Class</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="grid_view.js"></script>
+</body>
+</html> 
