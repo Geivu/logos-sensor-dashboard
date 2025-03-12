@@ -1,3 +1,4 @@
 {
-    "liveServer.settings.multiRootWorkspaceName": "logos-sensor-dashboard"
+    "liveServer.settings.multiRootWorkspaceName": "logos-sensor-dashboard",
+    "djlint.showInstallError": false
 }
