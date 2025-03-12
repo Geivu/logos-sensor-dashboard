@@ -126,10 +126,12 @@ document.addEventListener('DOMContentLoaded', function() {
         classCards.forEach(card => {
             const className = card.getAttribute('data-class');
             
-            // Temperature - smooth transition
+            // Temperature - always increasing or stable
             const tempElement = document.getElementById(`current-temp-${className}`);
-            const oldTemp = parseFloat(tempElement.textContent);
-            const newTemp = parseFloat(generateRandomValue(18, 28));
+            const oldTemp = parseFloat(tempElement.textContent) || 20.0;
+            // Small random increase (0 to 0.3°C)
+            const tempIncrement = Math.random() * 0.3;
+            const newTemp = oldTemp + tempIncrement;
             
             // Highlight changing value
             tempElement.classList.add('value-changing');
@@ -143,10 +145,12 @@ document.addEventListener('DOMContentLoaded', function() {
             tempStatusEl.textContent = tempStatus;
             tempStatusEl.className = `status-badge ${tempStatus.toLowerCase()}`;
             
-            // Light - smooth transition
+            // Light - always increasing or stable
             const lightElement = document.getElementById(`light-value-${className}`);
-            const oldLight = parseFloat(lightElement.textContent);
-            const newLight = parseFloat(generateRandomValue(0, 1000));
+            const oldLight = parseFloat(lightElement.textContent) || 100;
+            // Small random increase (0 to 50 lux)
+            const lightIncrement = Math.random() * 50;
+            const newLight = oldLight + lightIncrement;
             
             // Highlight changing value
             lightElement.classList.add('value-changing');
@@ -160,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
             lightStatusEl.textContent = lightStatus;
             lightStatusEl.className = `status-badge ${lightStatus.toLowerCase()}`;
             
-            // Presence - smoother transition
+            // Presence - smoother transition (this can toggle)
             const isOccupied = Math.random() > 0.3;
             const occupancyStatus = isOccupied ? 'Occupied' : 'Vacant';
             const occupancyLabel = isOccupied ? 'Active' : 'No Activity';
@@ -172,25 +176,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 occStatusEl.className = `status-badge ${occupancyStatus.toLowerCase()}`;
             }, Math.random() * 500); // Random delay for more natural updates
             
-            // Energy - smooth transition
+            // Energy - accumulating waste over time
             const wasteElement = document.getElementById(`current-waste-${className}`);
-            const oldWaste = parseFloat(wasteElement.textContent);
-            const newWaste = parseFloat(generateRandomValue(0.1, 2.5));
+            const currentWaste = parseFloat(wasteElement.textContent) || 0;
+            
+            // Generate a small increment (0.05 to 0.3 kWh)
+            const wasteIncrement = parseFloat(generateRandomValue(0.05, 0.3));
+            const newWaste = currentWaste + wasteIncrement;
             
             // Highlight changing value
             wasteElement.classList.add('value-changing');
             
-            // Gradually update waste
-            smoothlyUpdateValue(wasteElement, oldWaste, newWaste, '');
+            // Gradually update waste (accumulating)
+            smoothlyUpdateValue(wasteElement, currentWaste, newWaste, '');
             
             // Update energy status with delay
             setTimeout(() => {
                 const energyStatusEl = document.getElementById(`energy-status-${className}`);
                 
-                if (newWaste > 2) {
+                // Adjust thresholds based on accumulated waste
+                if (newWaste > 10) {
                     energyStatusEl.textContent = 'High';
                     energyStatusEl.className = 'status-badge high';
-                } else if (newWaste > 1) {
+                } else if (newWaste > 5) {
                     energyStatusEl.textContent = 'Warning';
                     energyStatusEl.className = 'status-badge warning';
                 } else {
@@ -242,4 +250,46 @@ document.addEventListener('DOMContentLoaded', function() {
     // Run updates with a slightly longer interval for smoother experience
     updateAllSensors();
     setInterval(updateAllSensors, 5000); // Update every 5 seconds instead of 2
+
+    // Add a reset function for daily energy waste
+    function resetEnergyWaste() {
+        document.querySelectorAll('.class-card[data-class]').forEach(card => {
+            const className = card.getAttribute('data-class');
+            const wasteElement = document.getElementById(`current-waste-${className}`);
+            
+            // Animate the reset
+            wasteElement.classList.add('value-changing');
+            
+            // Store the final value before reset (for reporting)
+            const finalValue = parseFloat(wasteElement.textContent) || 0;
+            console.log(`Class ${className} daily energy waste: ${finalValue.toFixed(1)} kWh`);
+            
+            // Reset to a small starting value (not zero)
+            smoothlyUpdateValue(wasteElement, finalValue, 0.1, '');
+            
+            // Reset status
+            setTimeout(() => {
+                const energyStatusEl = document.getElementById(`energy-status-${className}`);
+                energyStatusEl.textContent = 'Good';
+                energyStatusEl.className = 'status-badge good';
+            }, 300);
+        });
+    }
+
+    // Add a reset button to the header
+    const headerControls = document.querySelector('.header-controls');
+    const resetButton = document.createElement('button');
+    resetButton.className = 'reset-button';
+    resetButton.innerHTML = '<i class="fas fa-redo"></i> Reset Energy';
+    resetButton.addEventListener('click', resetEnergyWaste);
+    headerControls.appendChild(resetButton);
+
+    // Optional: Auto-reset at midnight
+    function checkForReset() {
+        const now = new Date();
+        if (now.getHours() === 0 && now.getMinutes() === 0) {
+            resetEnergyWaste();
+        }
+    }
+    setInterval(checkForReset, 60000); // Check every minute
 }); 

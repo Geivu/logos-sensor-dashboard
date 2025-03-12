@@ -366,4 +366,29 @@ body.light-theme .add-class-card:hover {
 /* Reduce repaints */
 .sensor-grid {
     contain: layout style;
+}
+
+.reset-button {
+    background: none;
+    border: none;
+    color: var(--dark-text);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+}
+
+.reset-button:hover {
+    background-color: var(--dark-hover);
+}
+
+body.light-theme .reset-button {
+    color: var(--light-text);
+}
+
+body.light-theme .reset-button:hover {
+    background-color: var(--light-hover);
 } 

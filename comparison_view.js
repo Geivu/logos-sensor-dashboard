@@ -148,4 +148,48 @@ function getStatus(energyWaste) {
 simulateData();
 
 // Update data every 5 seconds (for demonstration)
-setInterval(simulateData, 5000); 
+setInterval(simulateData, 5000);
+
+// Update the comparison view to ensure energy waste only increases
+function updateComparisonData() {
+    // For each class in the comparison
+    document.querySelectorAll('.comparison-card').forEach(card => {
+        const className = card.getAttribute('data-class');
+        if (!className) return;
+        
+        // Energy waste - always accumulating
+        const wasteElement = card.querySelector('.energy-value');
+        const currentWaste = parseFloat(wasteElement.textContent) || 0;
+        const wasteIncrement = parseFloat((Math.random() * 0.25 + 0.05).toFixed(1));
+        const newWaste = currentWaste + wasteIncrement;
+        
+        // Update with animation
+        animateValue(wasteElement, currentWaste, newWaste, 500);
+        
+        // Update other metrics similarly
+        // ...
+    });
+}
+
+// Add reset function for comparison_view.js
+function resetEnergyWaste() {
+    document.querySelectorAll('.comparison-card').forEach(card => {
+        const className = card.getAttribute('data-class');
+        if (!className) return;
+        
+        const wasteElement = card.querySelector('.energy-value');
+        const finalValue = parseFloat(wasteElement.textContent) || 0;
+        console.log(`Class ${className} comparison energy waste: ${finalValue.toFixed(1)} kWh`);
+        
+        // Reset to a small starting value with animation
+        animateValue(wasteElement, finalValue, 0.1, 800);
+    });
+}
+
+// Add reset button to comparison_view.html
+const headerControls = document.querySelector('.header-controls');
+const resetButton = document.createElement('button');
+resetButton.className = 'reset-button';
+resetButton.innerHTML = '<i class="fas fa-redo"></i> Reset Energy';
+resetButton.addEventListener('click', resetEnergyWaste);
+headerControls.appendChild(resetButton); 
