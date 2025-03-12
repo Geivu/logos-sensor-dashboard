@@ -25,21 +25,64 @@ document.addEventListener('DOMContentLoaded', function() {
     // Outside temperature (global)
     let outsideTemp = 28.5; // Starting outside temperature (hot day)
 
-    // Class data storage
+    // Class data storage with realistic baseline values
     const classData = {
-        '1A': { temp: 20.0, light: 100, occupied: false, waste: 0.1, targetTemp: 21.0 },
-        '1B': { temp: 21.5, light: 150, occupied: true, waste: 0.2, targetTemp: 22.0 },
-        '2A': { temp: 19.5, light: 200, occupied: false, waste: 0.3, targetTemp: 21.0 },
-        '2B': { temp: 22.0, light: 250, occupied: true, waste: 0.4, targetTemp: 22.0 },
-        '3A': { temp: 20.5, light: 300, occupied: false, waste: 0.5, targetTemp: 21.0 }
+        '1A': { 
+            temp: 21.5, 
+            light: 350, 
+            occupied: true, 
+            waste: 0.4, 
+            targetTemp: 22.0 
+        },
+        '1B': { 
+            temp: 22.0, 
+            light: 420, 
+            occupied: true, 
+            waste: 0.5, 
+            targetTemp: 22.5 
+        },
+        '2A': { 
+            temp: 22.5, 
+            light: 380, 
+            occupied: false, 
+            waste: 0.35, 
+            targetTemp: 22.0 
+        },
+        '2B': { 
+            temp: 21.8, 
+            light: 450, 
+            occupied: true, 
+            waste: 0.45, 
+            targetTemp: 22.0 
+        },
+        '3A': { 
+            temp: 22.2, 
+            light: 400, 
+            occupied: false, 
+            waste: 0.38, 
+            targetTemp: 22.0 
+        }
     };
     
-    // Current class
-    let currentClass = '1A';
+    // Get class from URL parameter if available
+    let currentClass = '1A'; // Default class
+    
+    // Parse URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const classParam = urlParams.get('class');
+    
+    // If class parameter exists and is valid, use it
+    if (classParam && classData[classParam]) {
+        currentClass = classParam;
+        console.log("Class set from URL parameter:", currentClass);
+    }
     
     // Class selector functionality
     const classSelector = document.getElementById('class-selector');
     if (classSelector) {
+        // Set the selector to match the current class
+        classSelector.value = currentClass;
+        
         classSelector.addEventListener('change', function() {
             currentClass = this.value;
             updateClassTitle();
@@ -119,8 +162,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Light controls
         else if (key === 'a') {
-            // Decrease light (but not below 0)
-            data.light = Math.max(0, data.light - 50);
+            // Decrease light (but not below 50 - some ambient light always present)
+            data.light = Math.max(50, data.light - 50);
             console.log("Light decreased to:", data.light);
             updateDisplay();
         } else if (key === 'd') {
@@ -141,12 +184,12 @@ document.addEventListener('DOMContentLoaded', function() {
         // Energy waste controls
         else if (key === 'e') {
             // Increase energy waste
-            data.waste += 0.5;
+            data.waste += 0.2;
             console.log("Energy waste increased to:", data.waste);
             updateDisplay();
         } else if (key === 'q') {
-            // Reset energy waste
-            data.waste = 0.1;
+            // Reset energy waste to baseline (0.3-0.5 kWh)
+            data.waste = 0.3 + (Math.random() * 0.2);
             console.log("Energy waste reset to:", data.waste);
             updateDisplay();
         }
@@ -288,254 +331,132 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log("Display updated successfully");
     }
     
-    // Add CSS for the controls and selector
-    const style = document.createElement('style');
-    style.textContent = `
-        .keyboard-controls-info {
-            max-width: 900px;
-            margin: 20px auto;
-            padding: 15px;
-            background-color: var(--dark-card-bg, #2a2a2a);
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        
-        body.light-theme .keyboard-controls-info {
-            background-color: var(--light-card-bg, #f5f5f5);
-        }
-        
-        .keyboard-controls-info h3 {
-            margin-top: 0;
-            color: var(--dark-text, #ffffff);
-        }
-        
-        body.light-theme .keyboard-controls-info h3 {
-            color: var(--light-text, #333333);
-        }
-        
-        .keyboard-controls-info ul {
-            padding-left: 20px;
-            color: var(--dark-subtext, #cccccc);
-        }
-        
-        body.light-theme .keyboard-controls-info ul {
-            color: var(--light-subtext, #666666);
-        }
-        
-        .keyboard-controls-info strong {
-            color: var(--dark-accent, #4caf50);
-            background-color: var(--dark-neutral, #333333);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: monospace;
-        }
-        
-        body.light-theme .keyboard-controls-info strong {
-            color: var(--light-accent, #2e7d32);
-            background-color: var(--light-neutral, #eeeeee);
-        }
-        
-        .class-selector {
-            background-color: var(--dark-card-bg, #2a2a2a);
-            color: var(--dark-text, #ffffff);
-            border: 1px solid var(--dark-border, #444444);
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 0.9rem;
-        }
-        
-        body.light-theme .class-selector {
-            background-color: var(--light-card-bg, #f5f5f5);
-            color: var(--light-text, #333333);
-            border: 1px solid var(--light-border, #dddddd);
-        }
-        
-        .single-class-view .class-card {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        .status-badge.wasting {
-            background-color: #ff9800;
-            color: #000;
-        }
-        
-        .temperature-display {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-        }
-        
-        .temperature-item {
-            display: flex;
-            align-items: center;
-        }
-        
-        .temperature-label {
-            font-size: 0.8rem;
-            color: var(--dark-subtext, #cccccc);
-            margin-right: 5px;
-        }
-        
-        body.light-theme .temperature-label {
-            color: var(--light-subtext, #666666);
-        }
-        
-        .sensor-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-top: 15px;
-        }
-        
-        .sensor-item {
-            padding: 15px;
-            border-radius: 8px;
-            background-color: var(--dark-card-bg, #333);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-            display: flex;
-            align-items: center;
-            min-height: 120px;
-        }
-        
-        body.light-theme .sensor-item {
-            background-color: var(--light-card-bg, #f0f0f0);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        .sensor-icon {
-            font-size: 2rem;
-            margin-right: 15px;
-            color: var(--dark-accent, #4caf50);
-            width: 50px;
-            text-align: center;
-        }
-        
-        body.light-theme .sensor-icon {
-            color: var(--light-accent, #2e7d32);
-        }
-        
-        .sensor-data {
-            flex: 1;
-        }
-        
-        .sensor-label {
-            display: block;
-            font-size: 1rem;
-            color: var(--dark-subtext, #aaa);
-            margin-bottom: 5px;
-        }
-        
-        body.light-theme .sensor-label {
-            color: var(--light-subtext, #666);
-        }
-        
-        .sensor-value {
-            display: block;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--dark-text, #fff);
-            margin-bottom: 8px;
-        }
-        
-        body.light-theme .sensor-value {
-            color: var(--light-text, #333);
-        }
-        
-        .status-badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            font-weight: bold;
-        }
-        
-        .energy-waste-item {
-            grid-column: 1 / -1;
-            background-color: var(--dark-accent-bg, #2d4c2d);
-        }
-        
-        body.light-theme .energy-waste-item {
-            background-color: var(--light-accent-bg, #e8f5e9);
-        }
-        
-        .class-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            border-bottom: 1px solid var(--dark-border, #444);
-            padding-bottom: 10px;
-        }
-        
-        body.light-theme .class-header {
-            border-bottom: 1px solid var(--light-border, #ddd);
-        }
-        
-        .class-header h2 {
-            font-size: 1.8rem;
-            margin: 0;
-        }
-    `;
-    document.head.appendChild(style);
-    
     // Add outside temperature and target temperature to the temperature sensor item
-    const tempSensorItem = document.querySelector('.sensor-item:nth-child(2)');
-    if (tempSensorItem) {
-        // Create temperature display container
-        const tempDisplay = document.createElement('div');
-        tempDisplay.className = 'temperature-display';
-        
-        // Create outside temperature element
-        const outsideTempItem = document.createElement('div');
-        outsideTempItem.className = 'temperature-item';
-        outsideTempItem.innerHTML = `
-            <span class="temperature-label">Outside:</span>
-            <span id="outside-temp-value">${outsideTemp.toFixed(1)}°C</span>
-        `;
-        
-        // Create target temperature element
-        const targetTempItem = document.createElement('div');
-        targetTempItem.className = 'temperature-item';
-        targetTempItem.innerHTML = `
-            <span class="temperature-label">Target:</span>
-            <span id="target-temp-value">${classData[currentClass].targetTemp.toFixed(1)}°C</span>
-        `;
-        
-        // Add elements to the display
-        tempDisplay.appendChild(outsideTempItem);
-        tempDisplay.appendChild(targetTempItem);
-        
-        // Insert before the status badge
-        const sensorData = tempSensorItem.querySelector('.sensor-data');
-        const statusBadge = tempSensorItem.querySelector('.status-badge');
-        sensorData.insertBefore(tempDisplay, statusBadge);
+    function addTemperatureDisplay() {
+        const tempSensorItem = document.querySelector('.sensor-item:nth-child(2)');
+        if (tempSensorItem && !document.querySelector('.temperature-display')) {
+            // Create temperature display container
+            const tempDisplay = document.createElement('div');
+            tempDisplay.className = 'temperature-display';
+            
+            // Create outside temperature element
+            const outsideTempItem = document.createElement('div');
+            outsideTempItem.className = 'temperature-item';
+            outsideTempItem.innerHTML = `
+                <span class="temperature-label">Outside:</span>
+                <span id="outside-temp-value">${outsideTemp.toFixed(1)}°C</span>
+            `;
+            
+            // Create target temperature element
+            const targetTempItem = document.createElement('div');
+            targetTempItem.className = 'temperature-item';
+            targetTempItem.innerHTML = `
+                <span class="temperature-label">Target:</span>
+                <span id="target-temp-value">${classData[currentClass].targetTemp.toFixed(1)}°C</span>
+            `;
+            
+            // Add elements to the display
+            tempDisplay.appendChild(outsideTempItem);
+            tempDisplay.appendChild(targetTempItem);
+            
+            // Insert before the status badge
+            const sensorData = tempSensorItem.querySelector('.sensor-data');
+            const statusBadge = tempSensorItem.querySelector('.status-badge');
+            sensorData.insertBefore(tempDisplay, statusBadge);
+        }
     }
     
     // Update keyboard controls info to include new controls
-    const controlsInfo = document.querySelector('.keyboard-controls-info ul');
-    if (controlsInfo) {
-        controlsInfo.innerHTML = `
-            <li><strong>W/S</strong> - Increase/Decrease Room Temperature</li>
-            <li><strong>T/G</strong> - Increase/Decrease Target Temperature</li>
-            <li><strong>P/L</strong> - Increase/Decrease Outside Temperature</li>
-            <li><strong>A/D</strong> - Decrease/Increase Light</li>
-            <li><strong>O</strong> - Toggle Occupancy</li>
-            <li><strong>E</strong> - Increase Energy Waste</li>
-            <li><strong>Q</strong> - Reset Energy Waste</li>
-            <li><strong>C</strong> - Change Class</li>
-        `;
+    function updateKeyboardControls() {
+        const controlsInfo = document.querySelector('.keyboard-controls-info ul');
+        if (controlsInfo) {
+            controlsInfo.innerHTML = `
+                <li><strong>W/S</strong> - Increase/Decrease Room Temperature</li>
+                <li><strong>T/G</strong> - Increase/Decrease Target Temperature</li>
+                <li><strong>P/L</strong> - Increase/Decrease Outside Temperature</li>
+                <li><strong>A/D</strong> - Decrease/Increase Light</li>
+                <li><strong>O</strong> - Toggle Occupancy</li>
+                <li><strong>E</strong> - Increase Energy Waste</li>
+                <li><strong>Q</strong> - Reset Energy Waste</li>
+                <li><strong>C</strong> - Change Class</li>
+            `;
+        }
     }
     
-    // Remove any existing buttons that might be added by old code
-    document.querySelectorAll('.update-button, .reset-button').forEach(button => {
-        button.remove();
-    });
+    // Add CSS for improved styling
+    function addCustomStyles() {
+        const style = document.createElement('style');
+        style.textContent = `
+            /* Ensure sensor items fit properly */
+            .sensor-item {
+                box-sizing: border-box;
+                width: 100%;
+                overflow: hidden;
+            }
+            
+            /* Make sure sensor data fits */
+            .sensor-data {
+                width: 100%;
+                overflow: hidden;
+            }
+            
+            /* Ensure values don't overflow */
+            .sensor-value {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            
+            /* Improve temperature display */
+            .temperature-display {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 5px;
+                flex-wrap: wrap;
+                gap: 8px;
+                width: 100%;
+            }
+            
+            /* Ensure class selector fits */
+            .class-selector {
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+            
+            /* Responsive adjustments */
+            @media (max-width: 768px) {
+                .class-header {
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 10px;
+                }
+                
+                .class-selector {
+                    width: 100%;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    }
     
-    // Initial setup
+    // Initial display update
     updateClassTitle();
+    addTemperatureDisplay();
+    updateKeyboardControls();
+    addCustomStyles();
     updateDisplay();
     
-    console.log("Initialization complete");
+    // Add reset button
+    const headerControls = document.querySelector('.header-controls');
+    if (headerControls && !document.querySelector('.reset-button')) {
+        const resetButton = document.createElement('button');
+        resetButton.className = 'reset-button';
+        resetButton.innerHTML = '<i class="fas fa-redo"></i> Reset Energy';
+        resetButton.addEventListener('click', function() {
+            // Reset energy waste to baseline
+            classData[currentClass].waste = 0.3 + (Math.random() * 0.2);
+            updateDisplay();
+        });
+        headerControls.appendChild(resetButton);
+    }
 }); 

@@ -32,20 +32,31 @@ body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     background-color: var(--dark-bg);
     color: var(--dark-text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 .grid-container {
     max-width: 1600px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Prevent overflow */
 }
 
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 24px;
-    padding: 0 16px;
+    margin-bottom: 15px;
+    padding: 0 10px;
+    flex-wrap: wrap; /* Allow wrapping on small screens */
 }
 
 h1 {
@@ -57,7 +68,8 @@ h1 {
 .header-controls {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 10px;
+    flex-wrap: wrap; /* Allow wrapping on small screens */
 }
 
 .current-time {
@@ -70,11 +82,11 @@ h1 {
     border: none;
     color: var(--dark-text);
     cursor: pointer;
-    padding: 8px;
+    padding: 6px;
     border-radius: 8px;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     text-decoration: none;
     font-size: 0.9rem;
 }
@@ -86,26 +98,90 @@ h1 {
 .grid-view {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 24px;
-    padding: 0 16px;
+    gap: 20px;
+    padding: 0 10px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .class-card {
     background-color: var(--dark-card-bg);
     border: 1px solid var(--dark-border);
     border-radius: 12px;
-    padding: 20px;
+    padding: 15px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    transform: translateZ(0);
-    will-change: transform;
+    gap: 15px;
+    box-shadow: 0 4px 6px var(--dark-shadow);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden; /* Prevent overflow */
+}
+
+/* Single class view specific styles */
+.single-class-view {
+    flex: 1;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0;
+}
+
+.single-class-view .class-card {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    cursor: default;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.single-class-view .sensor-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 15px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.single-class-view .sensor-item {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.single-class-view .energy-waste-item {
+    grid-column: 1 / -1;
+    height: auto;
+}
+
+.keyboard-controls-info {
+    max-width: 1200px;
+    margin: 15px auto 0;
+    padding: 15px;
+    background-color: var(--dark-card-bg);
+    border-radius: 12px;
+    border: 1px solid var(--dark-border);
+    box-shadow: 0 4px 6px var(--dark-shadow);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .class-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap; /* Allow wrapping on small screens */
+    gap: 10px;
 }
 
 .class-header h2 {
@@ -133,8 +209,10 @@ h1 {
 .sensor-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
+    gap: 15px;
     contain: layout style;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .sensor-item {
@@ -144,11 +222,14 @@ h1 {
     padding: 12px;
     background-color: var(--dark-bg);
     border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .sensor-icon {
     width: 32px;
     height: 32px;
+    min-width: 32px; /* Prevent icon from shrinking */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -162,17 +243,22 @@ h1 {
     display: flex;
     flex-direction: column;
     gap: 4px;
+    width: 100%;
+    overflow: hidden; /* Prevent overflow */
 }
 
 .sensor-label {
     font-size: 0.8rem;
     color: var(--dark-subtext);
+    white-space: nowrap; /* Prevent wrapping */
 }
 
 .sensor-value {
     font-size: 0.9rem;
     font-weight: 500;
     transition: color 0.5s ease-in-out;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Add ellipsis for overflow text */
 }
 
 .status-badge {
@@ -184,6 +270,7 @@ h1 {
     background-color: var(--dark-neutral);
     color: white;
     transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
+    white-space: nowrap; /* Prevent wrapping */
 }
 
 .status-badge.on,
@@ -248,6 +335,27 @@ h1 {
     background-color: var(--dark-hover);
 }
 
+/* Temperature display styling */
+.temperature-display {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    flex-wrap: wrap; /* Allow wrapping on small screens */
+    gap: 8px;
+}
+
+.temperature-item {
+    display: flex;
+    align-items: center;
+    white-space: nowrap; /* Prevent wrapping */
+}
+
+.temperature-label {
+    font-size: 0.8rem;
+    color: var(--dark-subtext);
+    margin-right: 5px;
+}
+
 /* Light theme styles */
 body.light-theme {
     background-color: var(--light-bg);
@@ -295,6 +403,10 @@ body.light-theme .add-class-card:hover {
     background-color: var(--light-hover);
 }
 
+body.light-theme .temperature-label {
+    color: var(--light-subtext);
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
     .grid-view {
@@ -305,10 +417,35 @@ body.light-theme .add-class-card:hover {
         grid-template-columns: 1fr;
     }
 
+    .single-class-view .sensor-grid {
+        grid-template-columns: 1fr;
+    }
+
     header {
         flex-direction: column;
-        gap: 16px;
+        gap: 10px;
         text-align: center;
+    }
+
+    .single-class-view .class-card {
+        padding: 12px;
+    }
+
+    .keyboard-controls-info {
+        padding: 12px;
+    }
+    
+    .header-controls {
+        justify-content: center;
+    }
+    
+    .class-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .class-selector {
+        width: 100%;
     }
 }
 
@@ -316,26 +453,38 @@ body.light-theme .add-class-card:hover {
     .grid-view {
         grid-template-columns: repeat(2, 1fr);
     }
+
+    .single-class-view .sensor-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1201px) {
+    .single-class-view .sensor-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 /* Energy waste item styling - enhanced */
 .energy-waste-item {
     grid-column: 1 / -1;  /* Make it span full width */
-    padding: 1.5rem;
-    margin-bottom: 1rem;
+    padding: 1.2rem;
+    margin-bottom: 0.8rem;
     background-color: rgba(255, 152, 0, 0.15);
     border-radius: 8px;
     border-left: 4px solid #ff9800;
     transition: border-color 0.5s ease-in-out, background-color 0.5s ease-in-out;
+    box-sizing: border-box;
+    width: 100%;
 }
 
 .energy-waste-item .sensor-icon {
-    font-size: 2em;
+    font-size: 1.5em;
     color: #ff9800;
 }
 
 .large-value {
-    font-size: 2em;
+    font-size: 1.8em;
     font-weight: bold;
     color: #ff9800;
     margin: 0.5rem 0;
@@ -373,12 +522,13 @@ body.light-theme .add-class-card:hover {
     border: none;
     color: var(--dark-text);
     cursor: pointer;
-    padding: 8px;
+    padding: 6px;
     border-radius: 8px;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     font-size: 0.9rem;
+    white-space: nowrap; /* Prevent wrapping */
 }
 
 .reset-button:hover {
@@ -391,4 +541,20 @@ body.light-theme .reset-button {
 
 body.light-theme .reset-button:hover {
     background-color: var(--light-hover);
+}
+
+/* Class selector styling */
+.class-selector {
+    padding: 5px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--dark-border);
+    background-color: var(--dark-card-bg);
+    color: var(--dark-text);
+    font-size: 0.9rem;
+}
+
+body.light-theme .class-selector {
+    border: 1px solid var(--light-border);
+    background-color: var(--light-card-bg);
+    color: var(--light-text);
 } 

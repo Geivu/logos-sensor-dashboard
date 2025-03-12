@@ -4,25 +4,41 @@ function updateSensorValues() {
         const className = row.getAttribute('data-class');
         if (!className) return;
 
-        // Temperature - always increasing
+        // Temperature - more realistic fluctuations
         const tempElement = row.querySelector('.temp-value');
-        const oldTemp = parseFloat(tempElement.textContent) || 20.0;
-        const tempIncrement = Math.random() * 0.3;
-        const newTemp = oldTemp + tempIncrement;
+        const oldTemp = parseFloat(tempElement.textContent) || 21.0;
+        // Temperature can go up or down slightly
+        const tempChange = (Math.random() * 0.4) - 0.2; // -0.2 to +0.2 degrees
+        const newTemp = oldTemp + tempChange;
         tempElement.textContent = newTemp.toFixed(1);
 
-        // Light - always increasing
+        // Light - more realistic fluctuations
         const lightElement = row.querySelector('.light-value');
-        const oldLight = parseFloat(lightElement.textContent) || 100;
-        const lightIncrement = Math.random() * 50;
-        const newLight = oldLight + lightIncrement;
+        const oldLight = parseFloat(lightElement.textContent) || 350;
+        // Light can go up or down
+        const lightChange = (Math.random() * 60) - 20; // -20 to +40 lux
+        const newLight = Math.max(50, oldLight + lightChange); // Minimum 50 lux (ambient light)
         lightElement.textContent = Math.round(newLight);
 
-        // Energy waste - always accumulating
+        // Energy waste - realistic fluctuations
         const wasteElement = row.querySelector('.energy-value');
-        const currentWaste = parseFloat(wasteElement.textContent) || 0;
-        const wasteIncrement = parseFloat((Math.random() * 0.25 + 0.05).toFixed(1));
-        const newWaste = currentWaste + wasteIncrement;
+        const currentWaste = parseFloat(wasteElement.textContent) || 0.3;
+        
+        // Determine if energy waste should increase or decrease
+        const shouldIncrease = Math.random() < 0.6; // 60% chance of increase
+        
+        let newWaste;
+        if (shouldIncrease) {
+            // Smaller increase: 0 to 0.1 kWh
+            const increase = Math.random() * 0.1;
+            newWaste = currentWaste + increase;
+        } else {
+            // Smaller decrease: 0 to 0.08 kWh
+            const decrease = Math.random() * 0.08;
+            // Ensure we don't go below the minimum baseline (0.3 kWh)
+            newWaste = Math.max(0.3, currentWaste - decrease);
+        }
+        
         wasteElement.textContent = newWaste.toFixed(1);
 
         // Update status indicators based on new values
@@ -40,13 +56,14 @@ function resetEnergyWaste() {
         const finalValue = parseFloat(wasteElement.textContent) || 0;
         console.log(`Class ${className} daily energy waste: ${finalValue.toFixed(1)} kWh`);
         
-        // Reset to a small starting value
-        wasteElement.textContent = '0.1';
+        // Reset to a realistic baseline value (0.3-0.5 kWh)
+        const baselineWaste = 0.3 + (Math.random() * 0.2);
+        wasteElement.textContent = baselineWaste.toFixed(1);
         
         // Update status indicators
         const tempValue = parseFloat(row.querySelector('.temp-value').textContent);
         const lightValue = parseFloat(row.querySelector('.light-value').textContent);
-        updateStatusIndicators(row, tempValue, lightValue, 0.1);
+        updateStatusIndicators(row, tempValue, lightValue, baselineWaste);
     });
 }
 
