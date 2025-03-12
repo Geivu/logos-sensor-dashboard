@@ -31,14 +31,17 @@ function initDashboard() {
     updateOccupancy();
     updateEnergyWaste();
     
-    // Set up regular updates with slower intervals
-    setInterval(updateTemperature, 2000);
-    setInterval(updateLightSensitivity, 3000);
-    setInterval(updateOccupancy, 4000);
-    setInterval(updateEnergyWaste, 3000);
+    // Remove all auto-refresh intervals
+    // setInterval(updateTemperature, 2000);
+    // setInterval(updateLightSensitivity, 3000);
+    // setInterval(updateOccupancy, 4000);
+    // setInterval(updateEnergyWaste, 3000);
     
     // Initialize chart
     initEnergyChart();
+    
+    // Add manual update button
+    addManualUpdateButton();
 }
 
 // Theme initialization and toggle
@@ -229,23 +232,33 @@ function updateOccupancy() {
 // Update the energy waste calculation and display
 function updateEnergyWaste() {
     // Calculate energy waste based on conditions
-    let currentWaste = 0;
+    let wasteIncrement = 0;
     
     // If room is vacant but systems are running, calculate waste
     if (!isOccupied) {
         // Add HVAC waste if running
         if (hvacRunning) {
-            currentWaste += Math.random() * 0.8 + 0.4; // 0.4-1.2 kWh waste from HVAC
+            wasteIncrement += Math.random() * 0.8 + 0.4; // 0.4-1.2 kWh waste from HVAC
         }
         
         // Add lighting waste if on
         if (lightsOn) {
-            currentWaste += Math.random() * 0.3 + 0.2; // 0.2-0.5 kWh waste from lights
+            wasteIncrement += Math.random() * 0.3 + 0.2; // 0.2-0.5 kWh waste from lights
         }
     } else {
         // Even when occupied, there can be some inefficiency
-        currentWaste = Math.random() * 0.2; // 0-0.2 kWh minor waste
+        wasteIncrement = Math.random() * 0.2; // 0-0.2 kWh minor waste
     }
+    
+    // Ensure we always have a positive increment (never decrease)
+    wasteIncrement = Math.max(0.05, wasteIncrement);
+    
+    // Get current waste value
+    const currentWasteElement = document.getElementById('current-waste');
+    const currentWaste = parseFloat(currentWasteElement.textContent) || 0;
+    
+    // Always add to the current waste (never decrease)
+    const newWaste = currentWaste + wasteIncrement;
     
     // Accumulate daily waste (simplified simulation)
     if (!totalDailyWaste) {
@@ -254,14 +267,14 @@ function updateEnergyWaste() {
     }
     
     // Add current waste to daily total
-    totalDailyWaste += currentWaste;
+    totalDailyWaste += wasteIncrement;
     
     // Calculate cost (using $0.15 per kWh as average electricity cost)
     const costPerKwh = 0.15;
     const wasteCost = totalDailyWaste * costPerKwh;
     
     // Update display with one decimal place
-    document.getElementById('current-waste').textContent = currentWaste.toFixed(1);
+    currentWasteElement.textContent = newWaste.toFixed(1);
     document.getElementById('daily-waste').textContent = totalDailyWaste.toFixed(1);
     document.getElementById('waste-cost').textContent = wasteCost.toFixed(2);
     
@@ -281,7 +294,7 @@ function updateEnergyWaste() {
     }
     
     // Update chart data
-    updateEnergyChart(currentWaste);
+    updateEnergyChart(newWaste);
 }
 
 // Initialize energy chart
@@ -428,7 +441,11 @@ function updateEnergyChart(newValue) {
     isAnimating = true;
     
     // Add new value and remove oldest
-    currentData.push(newValue);
+    // Ensure the new value is greater than the last value in the array
+    const lastValue = currentData[currentData.length - 1] || 0;
+    const valueToAdd = Math.max(newValue, lastValue + 0.1); // Ensure it's always increasing
+    
+    currentData.push(valueToAdd);
     currentData.shift();
     
     // Update with animation
@@ -457,5 +474,99 @@ window.addEventListener('resize', function() {
     }
 });
 
-// Initialize the dashboard when the page loads
-document.addEventListener('DOMContentLoaded', initDashboard); 
+// Add a manual update button
+function addManualUpdateButton() {
+    const headerControls = document.querySelector('.header-controls');
+    if (!headerControls) return;
+    
+    const updateButton = document.createElement('button');
+    updateButton.className = 'update-button';
+    updateButton.innerHTML = '<i class="fas fa-sync"></i> Update Data';
+    updateButton.addEventListener('click', function() {
+        updateTemperature();
+        updateLightSensitivity();
+        updateOccupancy();
+        updateEnergyWaste();
+    });
+    
+    headerControls.appendChild(updateButton);
+    
+    // Add CSS for the button
+    const style = document.createElement('style');
+    style.textContent = `
+    .update-button {
+        background: none;
+        border: none;
+        color: var(--text-color, #fff);
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+    }
+    
+    .update-button:hover {
+        background-color: var(--hover-color, rgba(255,255,255,0.1));
+    }
+    `;
+    document.head.appendChild(style);
+}
+
+// Find the chart update function and modify it to ensure energy waste only increases
+function updateChartData() {
+    // Get current data
+    const currentData = window.energyChart.data.datasets[0].data;
+    
+    // Create new data by adding small increments to existing values
+    const newData = currentData.map(value => {
+        // Add a small random increment (0.1 to 0.3)
+        const increment = Math.random() * 0.2 + 0.1;
+        return value + increment;
+    });
+    
+    // Update chart with new data
+    window.energyChart.data.datasets[0].data = newData;
+    window.energyChart.update();
+    
+    // Update total energy waste display
+    const totalWaste = newData.reduce((sum, value) => sum + value, 0).toFixed(1);
+    document.getElementById('total-energy-waste').textContent = totalWaste;
+    
+    // Update status based on total
+    updateEnergyStatus(totalWaste);
+}
+
+// Replace any random data generation with accumulating data
+// Look for functions like this and modify them:
+function generateRandomData() {
+    // Instead of random data, get current data and increment it
+    const currentData = window.energyChart.data.datasets[0].data;
+    if (!currentData || currentData.length === 0) {
+        // Initial data if none exists
+        return [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7];
+    }
+    
+    return currentData.map(value => {
+        const increment = Math.random() * 0.2 + 0.1;
+        return value + increment;
+    });
+}
+
+// If there's a reset function, make sure it properly resets the chart
+function resetChart() {
+    // Reset to small initial values
+    window.energyChart.data.datasets[0].data = [0.1, 0.2, 0.1, 0.3, 0.1, 0.2, 0.1];
+    window.energyChart.update();
+    
+    // Update total display
+    const totalWaste = window.energyChart.data.datasets[0].data.reduce((sum, value) => sum + value, 0).toFixed(1);
+    document.getElementById('total-energy-waste').textContent = totalWaste;
+    
+    // Update status
+    updateEnergyStatus(totalWaste);
+}
+
+// Make sure any existing reset button calls this function
+document.querySelector('.reset-button')?.addEventListener('click', resetChart); 
