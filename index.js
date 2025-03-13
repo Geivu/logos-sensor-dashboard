@@ -31,36 +31,31 @@ document.addEventListener('DOMContentLoaded', function() {
             temp: 21.5, 
             light: 350, 
             occupied: true, 
-            waste: 0.4, 
-            targetTemp: 22.0 
+            waste: 0.4
         },
         '1B': { 
             temp: 22.0, 
             light: 420, 
             occupied: true, 
-            waste: 0.5, 
-            targetTemp: 22.5 
+            waste: 0.5
         },
         '2A': { 
             temp: 22.5, 
             light: 380, 
             occupied: false, 
-            waste: 0.35, 
-            targetTemp: 22.0 
+            waste: 0.35
         },
         '2B': { 
             temp: 21.8, 
             light: 450, 
             occupied: true, 
-            waste: 0.45, 
-            targetTemp: 22.0 
+            waste: 0.45
         },
         '3A': { 
             temp: 22.2, 
             light: 400, 
             occupied: false, 
-            waste: 0.38, 
-            targetTemp: 22.0 
+            waste: 0.38
         }
     };
     
@@ -131,19 +126,6 @@ document.addEventListener('DOMContentLoaded', function() {
             // Decrease temperature (but not below 18)
             data.temp = Math.max(18, data.temp - 0.5);
             console.log("Temperature decreased to:", data.temp);
-            updateDisplay();
-        }
-        
-        // Target temperature controls
-        else if (key === 't') {
-            // Increase target temperature
-            data.targetTemp += 0.5;
-            console.log("Target temperature increased to:", data.targetTemp);
-            updateDisplay();
-        } else if (key === 'g') {
-            // Decrease target temperature (but not below 18)
-            data.targetTemp = Math.max(18, data.targetTemp - 0.5);
-            console.log("Target temperature decreased to:", data.targetTemp);
             updateDisplay();
         }
         
@@ -230,28 +212,18 @@ document.addEventListener('DOMContentLoaded', function() {
         // Temperature
         const tempValueEl = document.getElementById('temp-value');
         const tempStatusEl = document.getElementById('temp-status');
-        const targetTempEl = document.getElementById('target-temp-value');
         
-        if (tempValueEl) tempValueEl.textContent = `${data.temp.toFixed(1)}°C`;
-        if (targetTempEl) targetTempEl.textContent = `${data.targetTemp.toFixed(1)}°C`;
+        if (tempValueEl) tempValueEl.textContent = `Inside: ${data.temp.toFixed(1)}°C`;
         
-        // Determine AC status based on comparison with outside temperature and target temperature
+        // Determine AC status based on comparison with outside temperature
         let acStatus = 'Off';
         let acWasting = false;
         
-        // AC is on if:
-        // 1. Room is cooler than outside by more than 1°C (AC cooling)
-        // 2. Room temperature is below target temperature (overcooling)
+        // AC is on if room is cooler than outside by more than 1°C (AC cooling)
         if (data.temp < outsideTemp - 1) {
             acStatus = 'On';
             
-            // Check if AC is wasting energy
-            if (data.temp < data.targetTemp - 0.5) {
-                // Room is cooler than target (overcooling)
-                acWasting = true;
-            }
-            
-            // If room is vacant and AC is on, it's always wasting energy
+            // If room is vacant and AC is on, it's wasting energy
             if (!data.occupied) {
                 acWasting = true;
             }
@@ -331,7 +303,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log("Display updated successfully");
     }
     
-    // Add outside temperature and target temperature to the temperature sensor item
+    // Add outside temperature to the temperature sensor item
     function addTemperatureDisplay() {
         const tempSensorItem = document.querySelector('.sensor-item:nth-child(2)');
         if (tempSensorItem && !document.querySelector('.temperature-display')) {
@@ -347,17 +319,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 <span id="outside-temp-value">${outsideTemp.toFixed(1)}°C</span>
             `;
             
-            // Create target temperature element
-            const targetTempItem = document.createElement('div');
-            targetTempItem.className = 'temperature-item';
-            targetTempItem.innerHTML = `
-                <span class="temperature-label">Target:</span>
-                <span id="target-temp-value">${classData[currentClass].targetTemp.toFixed(1)}°C</span>
-            `;
-            
             // Add elements to the display
             tempDisplay.appendChild(outsideTempItem);
-            tempDisplay.appendChild(targetTempItem);
             
             // Insert before the status badge
             const sensorData = tempSensorItem.querySelector('.sensor-data');
@@ -372,7 +335,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (controlsInfo) {
             controlsInfo.innerHTML = `
                 <li><strong>W/S</strong> - Increase/Decrease Room Temperature</li>
-                <li><strong>T/G</strong> - Increase/Decrease Target Temperature</li>
                 <li><strong>P/L</strong> - Increase/Decrease Outside Temperature</li>
                 <li><strong>A/D</strong> - Decrease/Increase Light</li>
                 <li><strong>O</strong> - Toggle Occupancy</li>
@@ -417,10 +379,49 @@ document.addEventListener('DOMContentLoaded', function() {
                 width: 100%;
             }
             
+            /* Style temperature items consistently */
+            .temperature-item {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+            }
+            
+            /* Style temperature labels consistently */
+            .temperature-label {
+                font-weight: 500;
+                color: var(--text-secondary);
+            }
+            
+            /* Style temperature values consistently */
+            #temp-value, #outside-temp-value {
+                font-weight: 600;
+                color: var(--text-primary);
+            }
+            
             /* Ensure class selector fits */
             .class-selector {
                 max-width: 100%;
                 box-sizing: border-box;
+            }
+            
+            /* Two-column layout for sensors */
+            .sensors-container {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 20px;
+                width: 100%;
+            }
+            
+            /* Left column for energy waste */
+            .energy-column {
+                flex: 1;
+                min-width: 250px;
+            }
+            
+            /* Right column for other sensors */
+            .other-sensors-column {
+                flex: 2;
+                min-width: 300px;
             }
             
             /* Responsive adjustments */
