@@ -9,18 +9,6 @@
 </head>
 <body>
     <div class="grid-container">
-        <header>
-            <h1>Class 1A</h1>
-            <div class="header-controls">
-                <span class="current-time" id="current-time">00:00:00</span>
-                <button id="theme-toggle" class="theme-toggle">
-                    <i class="fas fa-moon"></i>
-                </button>
-                <a href="grid_view.html" class="view-toggle">
-                    <i class="fas fa-th-large"></i> Grid View
-                </a>
-            </div>
-        </header>
 
         <div class="grid-view single-class-view">
             <!-- Single Class Card -->
@@ -54,7 +42,16 @@
                         </div>
                         <div class="sensor-data">
                             <span class="sensor-label">Temperature</span>
-                            <span class="sensor-value" id="temp-value">20.0°C</span>
+                            <div class="temperature-display">
+                                <div class="temperature-item">
+                                    <span class="temperature-label">Inside:</span>
+                                    <span id="temp-value">20.0°C</span>
+                                </div>
+                                <div class="temperature-item">
+                                    <span class="temperature-label">Outside:</span>
+                                    <span id="outside-temp-value">28.5°C</span>
+                                </div>
+                            </div>
                             <span class="status-badge" id="temp-status">Off</span>
                         </div>
                     </div>
@@ -88,7 +85,8 @@
         <div class="keyboard-controls-info">
             <h3>Keyboard Controls</h3>
             <ul>
-                <li><strong>W/S</strong> - Increase/Decrease Temperature</li>
+                <li><strong>W/S</strong> - Increase/Decrease Room Temperature</li>
+                <li><strong>P/L</strong> - Increase/Decrease Outside Temperature</li>
                 <li><strong>A/D</strong> - Decrease/Increase Light</li>
                 <li><strong>O</strong> - Toggle Occupancy</li>
                 <li><strong>E</strong> - Increase Energy Waste</li>
@@ -97,6 +95,97 @@
             </ul>
         </div>
     </div>
+
+    <!-- Add CSS styles directly in the head -->
+    <style>
+        /* Ensure sensor items fit properly */
+        .sensor-item {
+            box-sizing: border-box;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        /* Make sure sensor data fits */
+        .sensor-data {
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        /* Ensure values don't overflow */
+        .sensor-value {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        /* Improve temperature display */
+        .temperature-display {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            flex-wrap: wrap;
+            gap: 8px;
+            width: 100%;
+        }
+        
+        /* Style temperature items consistently */
+        .temperature-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        /* Style temperature labels consistently */
+        .temperature-label {
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        
+        /* Style temperature values consistently */
+        #temp-value, #outside-temp-value {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        /* Ensure class selector fits */
+        .class-selector {
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+        
+        /* Two-column layout for sensors */
+        .sensors-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            width: 100%;
+        }
+        
+        /* Left column for energy waste */
+        .energy-column {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        /* Right column for other sensors */
+        .other-sensors-column {
+            flex: 2;
+            min-width: 300px;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .class-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .class-selector {
+                width: 100%;
+            }
+        }
+    </style>
 
     <script src="index.js"></script>
 </body>

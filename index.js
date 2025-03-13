@@ -213,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const tempValueEl = document.getElementById('temp-value');
         const tempStatusEl = document.getElementById('temp-status');
         
-        if (tempValueEl) tempValueEl.textContent = `Inside: ${data.temp.toFixed(1)}°C`;
+        if (tempValueEl) tempValueEl.textContent = `${data.temp.toFixed(1)}°C`;
         
         // Determine AC status based on comparison with outside temperature
         let acStatus = 'Off';
@@ -303,151 +303,11 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log("Display updated successfully");
     }
     
-    // Add outside temperature to the temperature sensor item
-    function addTemperatureDisplay() {
-        const tempSensorItem = document.querySelector('.sensor-item:nth-child(2)');
-        if (tempSensorItem && !document.querySelector('.temperature-display')) {
-            // Create temperature display container
-            const tempDisplay = document.createElement('div');
-            tempDisplay.className = 'temperature-display';
-            
-            // Create outside temperature element
-            const outsideTempItem = document.createElement('div');
-            outsideTempItem.className = 'temperature-item';
-            outsideTempItem.innerHTML = `
-                <span class="temperature-label">Outside:</span>
-                <span id="outside-temp-value">${outsideTemp.toFixed(1)}°C</span>
-            `;
-            
-            // Add elements to the display
-            tempDisplay.appendChild(outsideTempItem);
-            
-            // Insert before the status badge
-            const sensorData = tempSensorItem.querySelector('.sensor-data');
-            const statusBadge = tempSensorItem.querySelector('.status-badge');
-            sensorData.insertBefore(tempDisplay, statusBadge);
-        }
-    }
-    
-    // Update keyboard controls info to include new controls
-    function updateKeyboardControls() {
-        const controlsInfo = document.querySelector('.keyboard-controls-info ul');
-        if (controlsInfo) {
-            controlsInfo.innerHTML = `
-                <li><strong>W/S</strong> - Increase/Decrease Room Temperature</li>
-                <li><strong>P/L</strong> - Increase/Decrease Outside Temperature</li>
-                <li><strong>A/D</strong> - Decrease/Increase Light</li>
-                <li><strong>O</strong> - Toggle Occupancy</li>
-                <li><strong>E</strong> - Increase Energy Waste</li>
-                <li><strong>Q</strong> - Reset Energy Waste</li>
-                <li><strong>C</strong> - Change Class</li>
-            `;
-        }
-    }
-    
-    // Add CSS for improved styling
-    function addCustomStyles() {
-        const style = document.createElement('style');
-        style.textContent = `
-            /* Ensure sensor items fit properly */
-            .sensor-item {
-                box-sizing: border-box;
-                width: 100%;
-                overflow: hidden;
-            }
-            
-            /* Make sure sensor data fits */
-            .sensor-data {
-                width: 100%;
-                overflow: hidden;
-            }
-            
-            /* Ensure values don't overflow */
-            .sensor-value {
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-            }
-            
-            /* Improve temperature display */
-            .temperature-display {
-                display: flex;
-                justify-content: space-between;
-                margin-bottom: 5px;
-                flex-wrap: wrap;
-                gap: 8px;
-                width: 100%;
-            }
-            
-            /* Style temperature items consistently */
-            .temperature-item {
-                display: flex;
-                align-items: center;
-                gap: 5px;
-            }
-            
-            /* Style temperature labels consistently */
-            .temperature-label {
-                font-weight: 500;
-                color: var(--text-secondary);
-            }
-            
-            /* Style temperature values consistently */
-            #temp-value, #outside-temp-value {
-                font-weight: 600;
-                color: var(--text-primary);
-            }
-            
-            /* Ensure class selector fits */
-            .class-selector {
-                max-width: 100%;
-                box-sizing: border-box;
-            }
-            
-            /* Two-column layout for sensors */
-            .sensors-container {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 20px;
-                width: 100%;
-            }
-            
-            /* Left column for energy waste */
-            .energy-column {
-                flex: 1;
-                min-width: 250px;
-            }
-            
-            /* Right column for other sensors */
-            .other-sensors-column {
-                flex: 2;
-                min-width: 300px;
-            }
-            
-            /* Responsive adjustments */
-            @media (max-width: 768px) {
-                .class-header {
-                    flex-direction: column;
-                    align-items: flex-start;
-                    gap: 10px;
-                }
-                
-                .class-selector {
-                    width: 100%;
-                }
-            }
-        `;
-        document.head.appendChild(style);
-    }
-    
     // Initial display update
     updateClassTitle();
-    addTemperatureDisplay();
-    updateKeyboardControls();
-    addCustomStyles();
     updateDisplay();
     
-    // Add reset button
+    // Add reset button to header controls
     const headerControls = document.querySelector('.header-controls');
     if (headerControls && !document.querySelector('.reset-button')) {
         const resetButton = document.createElement('button');
