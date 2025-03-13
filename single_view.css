@@ -184,7 +184,7 @@ body {
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     padding: 20px;
-    margin-top: 20px;
+    margin-top: 500px;
     border: 1px solid var(--dark-border);
     color: var(--text-primary);
 }
