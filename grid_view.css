@@ -24,6 +24,18 @@
     --light-warning: #ffc107;
     --light-danger: #dc3545;
     --light-neutral: #6c757d;
+
+    --primary-color: #2c3e50;
+    --secondary-color: #34495e;
+    --accent-color: #3498db;
+    --text-primary: #333;
+    --text-secondary: #666;
+    --card-bg: #fff;
+    --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --success-color: #2ecc71;
+    --warning-color: #f39c12;
+    --danger-color: #e74c3c;
+    --neutral-color: #95a5a6;
 }
 
 body {
@@ -557,4 +569,251 @@ body.light-theme .class-selector {
     border: 1px solid var(--light-border);
     background-color: var(--light-card-bg);
     color: var(--light-text);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5;
+    color: var(--text-primary);
+    line-height: 1.6;
+}
+
+.grid-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Grid View Layout */
+.grid-view {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+/* Single Class View */
+.single-class-view {
+    width: 100%;
+}
+
+.class-card {
+    background-color: var(--card-bg);
+    border-radius: 10px;
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    border: 1px solid var(--card-border);
+}
+
+.class-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.class-header h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.class-selector {
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    background-color: white;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+/* Two-column sensor grid */
+.sensor-grid {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px;
+}
+
+/* Energy waste takes up the left column */
+.energy-waste-item {
+    flex: 1;
+    min-width: 300px;
+    height: 300px;
+    margin-right: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+}
+
+/* Other sensors stack in the right column */
+.sensor-item:not(.energy-waste-item) {
+    flex: 1;
+    min-width: 300px;
+    margin-bottom: 15px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+}
+
+.sensor-icon {
+    font-size: 1.8rem;
+    color: var(--accent-color);
+    margin-right: 15px;
+    width: 40px;
+    text-align: center;
+}
+
+.sensor-data {
+    flex: 1;
+}
+
+.sensor-label {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 5px;
+}
+
+.sensor-value {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 5px;
+}
+
+/* Status badges */
+.status-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.status-badge.good {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.status-badge.warning {
+    background-color: var(--warning-color);
+    color: white;
+}
+
+.status-badge.high {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.status-badge.on {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.status-badge.off {
+    background-color: var(--neutral-color);
+    color: white;
+}
+
+.status-badge.occupied {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.status-badge.vacant {
+    background-color: var(--neutral-color);
+    color: white;
+}
+
+.status-badge.wasting {
+    background-color: var(--warning-color);
+    color: white;
+}
+
+/* Temperature display */
+.temperature-display {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 5px;
+}
+
+.temperature-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.temperature-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-right: 5px;
+}
+
+/* Keyboard controls info */
+.keyboard-controls-info {
+    background-color: var(--card-bg);
+    border-radius: 10px;
+    box-shadow: var(--card-shadow);
+    padding: 20px;
+    margin-top: 20px;
+    border: 1px solid var(--card-border);
+}
+
+.keyboard-controls-info h3 {
+    margin-bottom: 10px;
+    color: var(--primary-color);
+}
+
+.keyboard-controls-info ul {
+    list-style-type: none;
+}
+
+.keyboard-controls-info li {
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.keyboard-controls-info strong {
+    display: inline-block;
+    min-width: 50px;
+    color: var(--accent-color);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .sensor-grid {
+        flex-direction: column;
+    }
+    
+    .energy-waste-item {
+        margin-right: 0;
+        margin-bottom: 20px;
+        height: 200px;
+    }
+    
+    .class-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .class-selector {
+        margin-top: 10px;
+        width: 100%;
+    }
 } 

@@ -2,20 +2,24 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log("DOM fully loaded");
     
-    // Theme toggle functionality
+    // Theme toggle functionality - only if element exists
     const themeToggle = document.getElementById('theme-toggle');
-    themeToggle.addEventListener('click', () => {
-        document.body.classList.toggle('light-theme');
-        themeToggle.querySelector('i').classList.toggle('fa-moon');
-        themeToggle.querySelector('i').classList.toggle('fa-sun');
-    });
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-theme');
+            themeToggle.querySelector('i').classList.toggle('fa-moon');
+            themeToggle.querySelector('i').classList.toggle('fa-sun');
+        });
+    }
 
     // Update current time
     function updateTime() {
         const now = new Date();
         const timeString = now.toLocaleTimeString();
-        document.getElementById('current-time').textContent = timeString;
-        console.log("Time updated:", timeString);
+        const currentTimeEl = document.getElementById('current-time');
+        if (currentTimeEl) {
+            currentTimeEl.textContent = timeString;
+        }
     }
     
     // Call updateTime immediately and then every second
@@ -72,36 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log("Class set from URL parameter:", currentClass);
     }
     
-    // Class selector functionality
-    const classSelector = document.getElementById('class-selector');
-    if (classSelector) {
-        // Set the selector to match the current class
-        classSelector.value = currentClass;
-        
-        classSelector.addEventListener('change', function() {
-            currentClass = this.value;
-            updateClassTitle();
-            updateDisplay();
-            console.log("Class changed to:", currentClass);
-        });
-    } else {
-        console.error("Class selector not found");
-    }
-    
-    // Function to update class title
-    function updateClassTitle() {
-        const classNameElement = document.getElementById('class-name');
-        const classCard = document.querySelector('.class-card');
-        const pageTitle = document.querySelector('h1');
-        
-        if (classNameElement) classNameElement.textContent = currentClass;
-        if (classCard) classCard.setAttribute('data-class', currentClass);
-        if (pageTitle) pageTitle.textContent = `Class ${currentClass}`;
-        
-        console.log("Class title updated to:", currentClass);
-    }
-    
-    // Add keyboard event listener
+    // Add keyboard event listener for class switching and other controls
     document.addEventListener('keydown', handleKeyPress);
     
     // Function to handle key presses
@@ -110,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log("Key pressed:", key);
         
         if (!classData[currentClass]) {
-            console.error("Current class data not found:", currentClass);
+            console.error("Invalid class:", currentClass);
             return;
         }
         
@@ -123,8 +98,8 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log("Temperature increased to:", data.temp);
             updateDisplay();
         } else if (key === 's') {
-            // Decrease temperature (but not below 18)
-            data.temp = Math.max(18, data.temp - 0.5);
+            // Decrease temperature
+            data.temp -= 0.5;
             console.log("Temperature decreased to:", data.temp);
             updateDisplay();
         }
@@ -137,15 +112,16 @@ document.addEventListener('DOMContentLoaded', function() {
             updateDisplay();
         } else if (key === 'l') {
             // Decrease outside temperature
-            outsideTemp = Math.max(0, outsideTemp - 0.5);
+            outsideTemp -= 0.5;
             console.log("Outside temperature decreased to:", outsideTemp);
             updateDisplay();
         }
         
         // Light controls
         else if (key === 'a') {
-            // Decrease light (but not below 50 - some ambient light always present)
-            data.light = Math.max(50, data.light - 50);
+            // Decrease light
+            data.light -= 50;
+            if (data.light < 0) data.light = 0;
             console.log("Light decreased to:", data.light);
             updateDisplay();
         } else if (key === 'd') {
@@ -176,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function() {
             updateDisplay();
         }
         
-        // Change class
+        // Change class - even though selector is hidden, still allow class switching
         else if (key === 'c') {
             // Cycle through classes
             const classes = Object.keys(classData);
@@ -186,10 +162,49 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log("Class cycled to:", currentClass);
             
             // Update selector and display
+            const classSelector = document.getElementById('class-selector');
             if (classSelector) classSelector.value = currentClass;
             updateClassTitle();
             updateDisplay();
+       
+            // Show a temporary notification about class change
+            showClassChangeNotification(currentClass);
         }
+    }
+    
+    // Function to show a temporary notification when class changes
+    function showClassChangeNotification(className) {
+        // Check if a notification already exists and remove it
+        const existingNotification = document.querySelector('.class-notification');
+        if (existingNotification) {
+            existingNotification.remove();
+        }
+        
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = 'class-notification';
+        notification.textContent = `Switched to Class ${className}`;
+        
+        // Add to document
+        document.body.appendChild(notification);
+        
+        // Remove after 2 seconds
+        setTimeout(() => {
+            notification.classList.add('fade-out');
+            setTimeout(() => notification.remove(), 500);
+        }, 2000);
+    }
+    
+    // Function to update class title - keep this for consistency
+    function updateClassTitle() {
+        const classNameElement = document.getElementById('class-name');
+        const classCard = document.querySelector('.class-card');
+        
+        if (classNameElement) classNameElement.textContent = currentClass;
+        if (classCard) classCard.setAttribute('data-class', currentClass);
+        
+        // Update document title to show current class
+        document.title = `Energy Monitor - Class ${currentClass}`;
     }
     
     // Function to update the display
@@ -288,10 +303,10 @@ document.addEventListener('DOMContentLoaded', function() {
         // Energy status
         if (energyStatusEl) {
             // Adjust thresholds based on accumulated waste
-            if (data.waste > 10) {
+            if (data.waste > 1.0) {
                 energyStatusEl.textContent = 'High';
                 energyStatusEl.className = 'status-badge high';
-            } else if (data.waste > 5) {
+            } else if (data.waste > 0.6) {
                 energyStatusEl.textContent = 'Warning';
                 energyStatusEl.className = 'status-badge warning';
             } else {
@@ -306,18 +321,4 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initial display update
     updateClassTitle();
     updateDisplay();
-    
-    // Add reset button to header controls
-    const headerControls = document.querySelector('.header-controls');
-    if (headerControls && !document.querySelector('.reset-button')) {
-        const resetButton = document.createElement('button');
-        resetButton.className = 'reset-button';
-        resetButton.innerHTML = '<i class="fas fa-redo"></i> Reset Energy';
-        resetButton.addEventListener('click', function() {
-            // Reset energy waste to baseline
-            classData[currentClass].waste = 0.3 + (Math.random() * 0.2);
-            updateDisplay();
-        });
-        headerControls.appendChild(resetButton);
-    }
 }); 

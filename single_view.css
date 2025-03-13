@@ -1,0 +1,274 @@
+:root {
+    /* Dark theme variables */
+    --dark-bg: #121212;
+    --dark-card-bg: #1e1e1e;
+    --dark-border: #333333;
+    --dark-text: #ffffff;
+    --dark-subtext: #aaaaaa;
+    --dark-hover: #2a2a2a;
+    --dark-shadow: rgba(0, 0, 0, 0.3);
+    --dark-success: #28a745;
+    --dark-warning: #ffc107;
+    --dark-danger: #dc3545;
+    --dark-neutral: #6c757d;
+    
+    /* Colors */
+    --primary-color: #2c3e50;
+    --secondary-color: #34495e;
+    --accent-color: #3498db;
+    --text-primary: #ecf0f1;
+    --text-secondary: #bdc3c7;
+    --success-color: #2ecc71;
+    --warning-color: #f39c12;
+    --danger-color: #e74c3c;
+    --neutral-color: #7f8c8d;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--dark-bg);
+    color: var(--dark-text);
+    min-height: 100vh;
+    padding: 20px;
+    font-size: 14px;
+}
+
+.grid-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* Two-column layout */
+.sensor-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    width: 100%;
+}
+
+/* Energy waste takes the entire left column */
+.energy-waste-item {
+    grid-column: 1;
+    grid-row: 1 / span 3;
+    background-color: var(--dark-card-bg);
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--dark-border);
+    height: 100%;
+}
+
+/* Other sensors stack in the right column */
+.sensor-item:not(.energy-waste-item) {
+    grid-column: 2;
+    background-color: var(--dark-card-bg);
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--dark-border);
+}
+
+.sensor-icon {
+    font-size: 1.8rem;
+    color: var(--accent-color);
+    margin-right: 15px;
+    width: 40px;
+    text-align: center;
+}
+
+.sensor-data {
+    flex: 1;
+}
+
+.sensor-label {
+    display: block;
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: 5px;
+}
+
+.sensor-value {
+    display: block;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 5px;
+}
+
+/* Status badges */
+.status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.status-badge.good {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.status-badge.warning {
+    background-color: var(--warning-color);
+    color: black;
+}
+
+.status-badge.high {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.status-badge.on {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.status-badge.off {
+    background-color: var(--neutral-color);
+    color: white;
+}
+
+.status-badge.occupied {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.status-badge.vacant {
+    background-color: var(--neutral-color);
+    color: white;
+}
+
+.status-badge.wasting {
+    background-color: var(--warning-color);
+    color: black;
+}
+
+/* Temperature display */
+.temperature-display {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.temperature-item {
+    display: flex;
+    align-items: center;
+}
+
+.temperature-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-right: 8px;
+}
+
+/* Keyboard controls info */
+.keyboard-controls-info {
+    background-color: var(--dark-card-bg);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    margin-top: 20px;
+    border: 1px solid var(--dark-border);
+    color: var(--text-primary);
+}
+
+.keyboard-controls-info h3 {
+    margin-bottom: 15px;
+    color: var(--accent-color);
+}
+
+.keyboard-controls-info ul {
+    list-style-type: none;
+}
+
+.keyboard-controls-info li {
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+}
+
+.keyboard-controls-info strong {
+    display: inline-block;
+    min-width: 60px;
+    color: var(--accent-color);
+}
+
+/* Hide class header */
+.class-header {
+    display: none;
+}
+
+/* Make energy waste item more prominent */
+.energy-waste-item .sensor-icon {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+.energy-waste-item .sensor-data {
+    text-align: center;
+}
+
+.energy-waste-item .sensor-label {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.energy-waste-item .sensor-value {
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .sensor-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .energy-waste-item {
+        grid-column: 1;
+        grid-row: auto;
+        margin-bottom: 20px;
+    }
+    
+    .sensor-item:not(.energy-waste-item) {
+        grid-column: 1;
+    }
+}
+
+/* Class change notification */
+.class-notification {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--dark-card-bg);
+    color: var(--text-primary);
+    padding: 10px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    border: 1px solid var(--dark-border);
+    font-size: 1rem;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+.class-notification.fade-out {
+    opacity: 0;
+} 
